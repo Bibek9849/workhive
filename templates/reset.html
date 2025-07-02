@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-side,
+        .right-side {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .right-side {
+            background: url('static/images/login.png') no-repeat center/cover;
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        p.subheading {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            margin: 10px 0 4px;
+            color: #374151;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1.8px solid #d1d5db;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #004B8D;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #9ca3af;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #ccc;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .google-btn img {
+            width: 18px;
+        }
+
+        .signin-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .signin-link a {
+            color: #004B8D;
+            text-decoration: none;
+        }
+
+
+
+        .links {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .links a {
+            color: #004B8D;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .right-side {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="left-side">
+        <div class="form-container">
+            <h2>Reset Password</h2>
+            <p class="subheading">Please enter email to continue to reset your account.</p>
+
+            <form action="#" method="POST">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required />
+
+
+            </form>
+            <button class="btn" type="submit">Reset</button>
+
+
+            <!-- <button class="btn" type="submit">Back</button> -->
+
+
+
+
+        </div>
+    </div>
+
+
+    <div class="right-side"></div>
+
+
+</body>
+
+</html>

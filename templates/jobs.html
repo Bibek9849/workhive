@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <style>
+        .filter-section {
+            background-color: #EBF5F4;
+        }
+
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            padding-left: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #003b80;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #003b80;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .apply-btn {
+            width: 100%;
+            background: #0050b3;
+            color: white;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .apply-btn:hover {
+            background: #003b80;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .tag {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: #bfdbfe;
+            transform: scale(1.05);
+        }
+
+        .hiring-banner {
+            background: #003b80;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .clear-filters {
+            background: transparent;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .clear-filters:hover {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <!-- Header -->
+    <header>
+        <a href="/">
+            <div class="logo">
+                <img src="static/images/logo2.png" alt="WorkHive Logo">
+            </div>
+        </a>
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'job' %}">Jobs</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+            </ul>
+        </nav>
+        <div class="auth">
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
+                <span id="lang-label">English</span>
+            </div>
+            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+
+            <!-- <button class="btn btn-primary">Register</button> -->
+        </div>
+    </header>
+
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex flex-col lg:flex-row gap-4">
+            <!-- Sidebar -->
+            <aside class="w-full lg:w-1/4 filter-section p-6 rounded-xl shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="section-title">
+                        <i class="fas fa-filter text-blue-600"></i>
+                        Search Filters
+                    </h2>
+                    <button class="clear-filters" onclick="clearAllFilters()">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+
+                <!-- Job Title Search -->
+                <div class="filter-group">
+                    <h3 class="section-title">
+                        <i class="fas fa-search text-blue-600"></i>
+                        Job Title
+                    </h3>
+                    <input type="text" placeholder="Search job title or company..." class="filter-input" id="jobSearch">
+                </div>
+
+                <!-- Location -->
+                <div class="filter-group">
+                    <h3 class="section-title">
+                        <i class="fas fa-map-marker-alt text-blue-600"></i>
+                        Location
+                    </h3>
+                    <select class="filter-input" id="locationSelect">
+                        <option value="">Choose city</option>
+                        <option value="kathmandu">Kathmandu</option>
+                        <option value="lalitpur">Lalitpur</option>
+                        <option value="bhaktapur">Bhaktapur</option>
+                        <option value="pokhara">Pokhara</option>
+                        <option value="chitwan">Chitwan</option>
+                    </select>
+                </div>
+
+                <!-- Category -->
+                <div class="filter-group">
+                    <h3 class="section-title">
+                        <i class="fas fa-layer-group text-blue-600"></i>
+                        Category
+                    </h3>
+                    <div class="space-y-1">
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="creative"> Creative & Design
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="business"> Business & Finance
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="construction"> Construction
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="commerce"> E-Commerce
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="tourism"> Hotels & Tourism
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="it"> Information Technology
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Job Type -->
+                <div class="filter-group">
+                    <h3 class="section-title">
+                        <i class="fas fa-briefcase text-blue-600"></i>
+                        Job Type
+                    </h3>
+                    <div class="space-y-1">
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="fulltime"> Full Time
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="parttime"> Part Time
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="internship"> Internship
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="freelance"> Freelance
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Experience Level -->
+                <div class="filter-group">
+                    <h3 class="section-title">
+                        <i class="fas fa-chart-line text-blue-600"></i>
+                        Experience Level
+                    </h3>
+                    <div class="space-y-1">
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="entry"> Entry Level (0-1 years)
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="junior"> Junior (1-3 years)
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="mid"> Mid Level (3-6 years)
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="senior"> Senior (6+ years)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Date Posted -->
+                <div class="filter-group">
+                    <h3 class="section-title">
+                        <i class="fas fa-calendar-alt text-blue-600"></i>
+                        Date Posted
+                    </h3>
+                    <div class="space-y-1">
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="24h"> Last 24 hours
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="7d"> Last 7 days
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="30d"> Last 30 days
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="any"> Any time
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Salary Range -->
+                <div class="filter-group">
+                    <h3 class="section-title">
+                        <i class="fas fa-money-bill-wave text-blue-600"></i>
+                        Salary Range
+                    </h3>
+                    <div class="flex gap-2 mb-2">
+                        <input type="number" placeholder="Min (Rs)" class="filter-input" id="minSalary">
+                        <input type="number" placeholder="Max (Rs)" class="filter-input" id="maxSalary">
+                    </div>
+                    <div class="text-sm text-gray-600 mb-3">
+                        <span>Popular ranges:</span>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            <button class="text-xs bg-white px-2 py-1 rounded border"
+                                onclick="setSalaryRange(15000, 30000)">15k-30k</button>
+                            <button class="text-xs bg-white px-2 py-1 rounded border"
+                                onclick="setSalaryRange(30000, 60000)">30k-60k</button>
+                            <button class="text-xs bg-white px-2 py-1 rounded border"
+                                onclick="setSalaryRange(60000, 100000)">60k-100k</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="apply-btn" onclick="applyFilters()">
+                    <i class="fas fa-search mr-2"></i>
+                    Apply Filters
+                </button>
+
+                <!-- Popular Tags -->
+                <div class="filter-group">
+                    <h3 class="section-title">
+                        <i class="fas fa-tags text-blue-600"></i>
+                        Popular Tags
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="tag" onclick="searchByTag('creative')">creative</span>
+                        <span class="tag" onclick="searchByTag('management')">management</span>
+                        <span class="tag" onclick="searchByTag('staff')">staff</span>
+                        <span class="tag" onclick="searchByTag('remote')">remote</span>
+                        <span class="tag" onclick="searchByTag('urgent')">urgent</span>
+                    </div>
+                </div>
+
+                <!-- Hiring Banner -->
+                <div class="hiring-banner">
+                    <div class="text-2xl font-bold mb-2">
+                        <i class="fas fa-bullhorn mr-2"></i>
+                        WE ARE HIRING
+                    </div>
+                    <p class="mb-3">Join our team today!</p>
+                    <button
+                        class="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        Apply Now
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="w-full lg:w-3/4">
+                <div class="flex justify-between items-center mb-4">
+                    <p>Showing 6 of 10 results</p>
+                    <select class="border rounded p-2">
+                        <option>Sort by latest</option>
+                    </select>
+                </div>
+
+                <!-- Job Cards -->
+                <div class="space-y-4">
+                    <!-- Example Job Card -->
+                    {% for job in jobs %}
+                    <div class="job-card">
+                        <div class="posted">{{ job.posted_at|timesince }} ago</div>
+                        <div class="job-info-left">
+                            {% if job.company.logo %}
+                            <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo">
+                            {% else %}
+                            <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Default Logo">
+                            {% endif %}
+
+                            <div class="job-details">
+                                <h3>{{ job.title }}</h3>
+                                <p>{{ job.company.name }}</p>
+                                <div class="job-meta">
+                                    <span><i class="fas fa-laptop-code"></i> {{ job.category.name }}</span>
+                                    <span><i class="fas fa-clock"></i> {{ job.job_type.name }}</span>
+                                    <span><i class="fas fa-money-bill"></i> Rs {{ job.salary_min }} - Rs {{
+                                        job.salary_max }}</span>
+
+                                    <span><i class="fas fa-map-marker-alt"></i> {{ job.company.address }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'details' job.id %}" class="btn btn-primary">Job Details</a>
+                    </div>
+                    {% empty %}
+                    <p>No recent jobs found.</p>
+                    {% endfor %}
+
+                    <!-- Additional job listings can be added following the same pattern -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            const flag = document.getElementById('lang-flag');
+            const label = document.getElementById('lang-label');
+            const title = document.getElementById('hero-title');
+
+            if (label.textContent === 'English') {
+                // Switch to Nepali
+                flag.src = 'https://flagcdn.com/16x12/np.png';
+                label.textContent = 'नेपाली';
+            } else {
+                // Switch to English
+                flag.src = 'https://flagcdn.com/16x12/gb.png';
+                label.textContent = 'English';
+            }
+        }
+        function clearAllFilters() {
+            // Clear all checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+            // Clear text inputs
+            document.getElementById('jobSearch').value = '';
+            document.getElementById('minSalary').value = '';
+            document.getElementById('maxSalary').value = '';
+
+            // Reset select
+            document.getElementById('locationSelect').value = '';
+
+            console.log('All filters cleared');
+        }
+
+        function setSalaryRange(min, max) {
+            document.getElementById('minSalary').value = min;
+            document.getElementById('maxSalary').value = max;
+        }
+
+        function searchByTag(tag) {
+            document.getElementById('jobSearch').value = tag;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            // Collect all filter values
+            const filters = {
+                jobTitle: document.getElementById('jobSearch').value,
+                location: document.getElementById('locationSelect').value,
+                categories: Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value),
+                minSalary: document.getElementById('minSalary').value,
+                maxSalary: document.getElementById('maxSalary').value
+            };
+
+            console.log('Applying filters:', filters);
+
+            // Add visual feedback
+            const btn = document.querySelector('.apply-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Searching...';
+            btn.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                // Show success feedback
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i>Filters Applied';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 1500);
+            }, 1000);
+        }
+
+        // Add real-time search functionality
+        document.getElementById('jobSearch').addEventListener('input', function (e) {
+            if (e.target.value.length > 2) {
+                // Debounced search implementation would go here
+                console.log('Searching for:', e.target.value);
+            }
+        });
+
+        // Add filter count badge
+        function updateFilterCount() {
+            const checkedFilters = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            const hasTextFilters = document.getElementById('jobSearch').value ||
+                document.getElementById('minSalary').value ||
+                document.getElementById('maxSalary').value ||
+                document.getElementById('locationSelect').value;
+
+            const totalFilters = checkedFilters + (hasTextFilters ? 1 : 0);
+
+            // Update filter badge (you can add this to the UI)
+            console.log('Active filters:', totalFilters);
+        }
+
+        // Listen for filter changes
+        document.addEventListener('change', updateFilterCount);
+        document.addEventListener('input', updateFilterCount);
+    </script>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-icon">W</div>
+                    <div class="logo-text">WORKHIVE</div>
+                </div>
+
+                <div class="footer-contact">
+                    <div class="contact-item">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        <span>Gongabu, Kathmandu</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                        </svg>
+                        <span>9849943368</span>
+                    </div>
+                </div>
+
+                <div class="footer-social">
+                    <a href="#" class="social-link" title="Social Media">
+                        <svg class="social-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link" title="Facebook">
+                        <svg class="social-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link" title="Twitter">
+                        <svg class="social-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link" title="LinkedIn">
+                        <svg class="social-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-nav">
+                <a href="#" class="nav-link">Jobs</a>
+                <a href="#" class="nav-link">About Us</a>
+                <a href="#" class="nav-link">Contact Us</a>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="copyright">
+                    Copyright © 2025 • WorkHive
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

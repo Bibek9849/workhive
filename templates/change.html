@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WorkHive - Change Password</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .sidebar-link {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 4px 0;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateX(4px);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .profile-completion {
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak {
+            background: #ef4444;
+        }
+
+        .strength-medium {
+            background: #f59e0b;
+        }
+
+        .strength-strong {
+            background: #10b981;
+        }
+
+        .password-toggle {
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: #3b82f6;
+        }
+
+        .password-requirements {
+            font-size: 0.875rem;
+        }
+
+        .requirement-met {
+            color: #10b981;
+        }
+
+        .requirement-unmet {
+            color: #6b7280;
+        }
+
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+
+        .input-focus:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <header>
+        <a href="/">
+            <div class="logo">
+                <img src="static/images/logo2.png" alt="WorkHive Logo">
+            </div>
+        </a>
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'job' %}">Jobs</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+            </ul>
+        </nav>
+        <div class="auth">
+            <div class="language-toggle" onclick="toggleLanguage()">
+                <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
+                <span id="lang-label">English</span>
+            </div>
+
+            <!-- User Profile with Dropdown -->
+            <div class="user-menu">
+                <button class="btn btn-outline profile-btn" onclick="toggleProfileDropdown()">
+                    <i class="fas fa-user-circle"></i> John Doe
+                </button>
+                <div id="profile-dropdown" class="profile-dropdown">
+                    <a href="#" class="dropdown-item">Profile</a>
+                    <a href="#" class="dropdown-item">Settings</a>
+                    <a href="#" class="dropdown-item">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Enhanced Sidebar -->
+            <aside class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <!-- Profile Summary -->
+                    <div class="text-center mb-8">
+                        <!-- Editable Profile Image -->
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <img id="profile-preview" src="https://randomuser.me/api/portraits/men/75.jpg"
+                                class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                                alt="Profile Picture" />
+                            <label for="profile-upload"
+                                class="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full cursor-pointer shadow-md hover:bg-blue-700 transition">
+                                <i class="fas fa-camera text-white text-xs"></i>
+                            </label>
+                            <input type="file" id="profile-upload" accept="image/*" class="hidden"
+                                onchange="previewProfileImage(event)" />
+                        </div>
+
+                        <h3 class="font-semibold text-lg text-gray-900">John Doe</h3>
+                        <p class="text-gray-500 text-sm">Software Developer</p>
+
+                        <!-- Profile Completion -->
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs text-gray-600 mb-1">
+                                <span>Profile Completion</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="profile-completion h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Navigation Links -->
+                    <nav class="space-y-2">
+                        <a href="{% url 'profile' %}"
+                            class="sidebar-link flex items-center text-gray-600 text-sm font-medium">
+                            <i class="fas fa-user mr-3"></i>
+                            Profile
+                        </a>
+                        <a href="{% url 'change' %}" class="sidebar-link active flex items-center text-sm font-medium">
+                            <i class="fas fa-lock mr-3"></i>
+                            Change Password
+                        </a>
+                        <a href="{% url 'applied' %}"
+                            class="sidebar-link flex items-center text-gray-600 text-sm font-medium">
+                            <i class="fas fa-briefcase mr-3"></i>
+                            Applied Jobs
+                            <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">3</span>
+                        </a>
+
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Enhanced Main Content -->
+            <main class="lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <!-- Header with Icon -->
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-900 flex items-center">
+                                <i class="fas fa-shield-alt text-blue-600 mr-3"></i>
+                                Change Password
+                            </h1>
+                            <p class="text-gray-600 mt-2">Keep your account secure with a strong password</p>
+                        </div>
+                        <div class="hidden sm:block">
+                            <div
+                                class="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-key text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="changePasswordForm" class="space-y-6">
+                        <!-- Current Password -->
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                <i class="fas fa-unlock-alt text-gray-600 mr-2"></i>
+                                Current Password
+                            </h3>
+                            <div class="relative">
+                                <input type="password" id="currentPassword" placeholder="Enter your current password"
+                                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus" />
+                                <button type="button" class="absolute right-3 top-3 password-toggle"
+                                    onclick="togglePassword('currentPassword')">
+                                    <i class="fas fa-eye text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- New Password Section -->
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                <i class="fas fa-lock text-gray-600 mr-2"></i>
+                                New Password
+                            </h3>
+
+                            <!-- New Password Input -->
+                            <div class="space-y-4">
+                                <div class="relative">
+                                    <input type="password" id="newPassword" placeholder="Enter your new password"
+                                        class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus"
+                                        oninput="checkPasswordStrength()" />
+                                    <button type="button" class="absolute right-3 top-3 password-toggle"
+                                        onclick="togglePassword('newPassword')">
+                                        <i class="fas fa-eye text-gray-400"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Password Strength Indicator -->
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">Password Strength</span>
+                                        <span id="strengthText" class="font-medium">Weak</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-1">
+                                        <div id="strengthBar" class="password-strength strength-weak" style="width: 0%">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Password Requirements -->
+                                <div class="password-requirements space-y-2 mt-4">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Password must contain:</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                        <div id="req-length" class="requirement-unmet flex items-center text-xs">
+                                            <i class="fas fa-times-circle mr-2"></i>
+                                            At least 8 characters
+                                        </div>
+                                        <div id="req-uppercase" class="requirement-unmet flex items-center text-xs">
+                                            <i class="fas fa-times-circle mr-2"></i>
+                                            One uppercase letter
+                                        </div>
+                                        <div id="req-lowercase" class="requirement-unmet flex items-center text-xs">
+                                            <i class="fas fa-times-circle mr-2"></i>
+                                            One lowercase letter
+                                        </div>
+                                        <div id="req-number" class="requirement-unmet flex items-center text-xs">
+                                            <i class="fas fa-times-circle mr-2"></i>
+                                            One number
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                <i class="fas fa-check-double text-gray-600 mr-2"></i>
+                                Confirm New Password
+                            </h3>
+                            <div class="relative">
+                                <input type="password" id="confirmPassword" placeholder="Confirm your new password"
+                                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus"
+                                    oninput="checkPasswordMatch()" />
+                                <button type="button" class="absolute right-3 top-3 password-toggle"
+                                    onclick="togglePassword('confirmPassword')">
+                                    <i class="fas fa-eye text-gray-400"></i>
+                                </button>
+                            </div>
+                            <div id="passwordMatch" class="mt-2 text-sm hidden">
+                                <div id="matchSuccess" class="text-green-600 flex items-center hidden">
+                                    <i class="fas fa-check-circle mr-2"></i>
+                                    Passwords match
+                                </div>
+                                <div id="matchError" class="text-red-600 flex items-center hidden">
+                                    <i class="fas fa-times-circle mr-2"></i>
+                                    Passwords don't match
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Tip -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-info-circle text-blue-600 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-blue-900">Security Tip</h4>
+                                    <p class="text-sm text-blue-700 mt-1">
+                                        Choose a password that's unique to WorkHive and avoid using personal
+                                        information.
+                                        Consider using a password manager for better security.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-4 pt-6">
+                            <button type="submit"
+                                class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg hover:shadow-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                id="updateButton" disabled>
+                                <i class="fas fa-shield-check mr-2"></i>
+                                Update Password
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function previewProfileImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profile-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+
+            // Check individual requirements
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password)
+            };
+
+            // Update requirement indicators
+            Object.keys(requirements).forEach(req => {
+                const element = document.getElementById(`req-${req}`);
+                const icon = element.querySelector('i');
+
+                if (requirements[req]) {
+                    element.classList.remove('requirement-unmet');
+                    element.classList.add('requirement-met');
+                    icon.classList.remove('fa-times-circle');
+                    icon.classList.add('fa-check-circle');
+                } else {
+                    element.classList.remove('requirement-met');
+                    element.classList.add('requirement-unmet');
+                    icon.classList.remove('fa-check-circle');
+                    icon.classList.add('fa-times-circle');
+                }
+            });
+
+            // Calculate strength
+            const metRequirements = Object.values(requirements).filter(Boolean).length;
+            let strength = 0;
+            let strengthLabel = 'Weak';
+            let strengthClass = 'strength-weak';
+
+            if (metRequirements === 4) {
+                strength = 100;
+                strengthLabel = 'Strong';
+                strengthClass = 'strength-strong';
+            } else if (metRequirements >= 2) {
+                strength = 60;
+                strengthLabel = 'Medium';
+                strengthClass = 'strength-medium';
+            } else if (password.length > 0) {
+                strength = 30;
+            }
+
+            // Update strength bar
+            strengthBar.style.width = strength + '%';
+            strengthBar.className = 'password-strength ' + strengthClass;
+            strengthText.textContent = strengthLabel;
+
+            checkFormValidity();
+            checkPasswordMatch();
+        }
+
+        function checkPasswordMatch() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const matchContainer = document.getElementById('passwordMatch');
+            const matchSuccess = document.getElementById('matchSuccess');
+            const matchError = document.getElementById('matchError');
+
+            if (confirmPassword.length > 0) {
+                matchContainer.classList.remove('hidden');
+
+                if (newPassword === confirmPassword) {
+                    matchSuccess.classList.remove('hidden');
+                    matchError.classList.add('hidden');
+                } else {
+                    matchSuccess.classList.add('hidden');
+                    matchError.classList.remove('hidden');
+                }
+            } else {
+                matchContainer.classList.add('hidden');
+            }
+
+            checkFormValidity();
+        }
+
+        function checkFormValidity() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const updateButton = document.getElementById('updateButton');
+
+            // Check if all requirements are met
+            const requirements = {
+                length: newPassword.length >= 8,
+                uppercase: /[A-Z]/.test(newPassword),
+                lowercase: /[a-z]/.test(newPassword),
+                number: /\d/.test(newPassword)
+            };
+
+            const allRequirementsMet = Object.values(requirements).every(Boolean);
+            const passwordsMatch = newPassword === confirmPassword;
+            const allFieldsFilled = currentPassword && newPassword && confirmPassword;
+
+            updateButton.disabled = !(allFieldsFilled && allRequirementsMet && passwordsMatch);
+        }
+
+        // Form submission
+        document.getElementById('changePasswordForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const button = document.getElementById('updateButton');
+            const originalText = button.innerHTML;
+
+            // Show loading state
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
+            button.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                // Show success state
+                button.innerHTML = '<i class="fas fa-check mr-2"></i>Password Updated!';
+                button.classList.remove('from-blue-600', 'to-purple-600');
+                button.classList.add('bg-green-600');
+
+                // Reset form
+                setTimeout(() => {
+                    document.getElementById('changePasswordForm').reset();
+                    document.getElementById('passwordMatch').classList.add('hidden');
+                    document.getElementById('strengthBar').style.width = '0%';
+                    document.getElementById('strengthText').textContent = 'Weak';
+
+                    // Reset requirements
+                    document.querySelectorAll('[id^="req-"]').forEach(req => {
+                        req.classList.remove('requirement-met');
+                        req.classList.add('requirement-unmet');
+                        const icon = req.querySelector('i');
+                        icon.classList.remove('fa-check-circle');
+                        icon.classList.add('fa-times-circle');
+                    });
+
+                    // Reset button
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-600');
+                    button.classList.add('from-blue-600', 'to-purple-600');
+                    button.disabled = true;
+                }, 2000);
+            }, 1500);
+        });
+
+        // Add event listeners
+        document.getElementById('currentPassword').addEventListener('input', checkFormValidity);
+        document.getElementById('newPassword').addEventListener('input', checkPasswordStrength);
+        document.getElementById('confirmPassword').addEventListener('input', checkPasswordMatch);
+    </script>
+</body>
+
+</html>
