@@ -16,7 +16,7 @@
     <header>
         <a href="/">
             <div class="logo">
-                <img src="static/images/logo2.png" alt="WorkHive Logo">
+                <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo">
             </div>
         </a>
 
@@ -28,15 +28,39 @@
                 <li><a href="{% url 'contact' %}">Contact Us</a></li>
             </ul>
         </nav>
+
         <div class="auth">
             <div class="language-toggle" onclick="toggleLanguage()">
                 <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
                 <span id="lang-label">English</span>
             </div>
+
+            {% if user.is_authenticated %}
+            <!-- After login: Show profile + logout -->
+            <div class="user-menu">
+                <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
+                    {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% else %}
+                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
+                    {% endif %}
+                    <span class="username">{{ user.first_name }}</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+
+                <div id="profile-dropdown" class="profile-dropdown hidden">
+                    <a href="{% url 'profile' %}">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </div>
+            </div>
+
+
+            {% else %}
+            <!-- Before login: Show login/register -->
             <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
             <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
-
-            <!-- <button class="btn btn-primary">Register</button> -->
+            {% endif %}
         </div>
     </header>
     <div class="container mx-auto px-4 py-10">
@@ -166,6 +190,20 @@
             </div>
         </div>
     </footer>
+    <script>function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function (e) {
+            const dropdown = document.getElementById('profile-dropdown');
+            const button = document.getElementById('profile-button');
+
+            if (!button.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });</script>
 </body>
 
 </html>

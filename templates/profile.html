@@ -33,7 +33,7 @@
         }
 
         .sidebar-link.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #004B8D, #004B8D);
             color: white;
         }
 
@@ -47,7 +47,7 @@
     <header>
         <a href="/">
             <div class="logo">
-                <img src="static/images/logo2.png" alt="WorkHive Logo">
+                <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo">
             </div>
         </a>
 
@@ -59,25 +59,40 @@
                 <li><a href="{% url 'contact' %}">Contact Us</a></li>
             </ul>
         </nav>
+
         <div class="auth">
             <div class="language-toggle" onclick="toggleLanguage()">
                 <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
                 <span id="lang-label">English</span>
             </div>
 
-            <!-- User Profile with Dropdown -->
+            {% if user.is_authenticated %}
+            <!-- After login: Show profile + logout -->
             <div class="user-menu">
-                <button class="btn btn-outline profile-btn" onclick="toggleProfileDropdown()">
-                    <i class="fas fa-user-circle"></i> John Doe
+                <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
+                    {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% else %}
+                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
+                    {% endif %}
+                    <span class="username">{{ user.first_name }}</span>
+                    <i class="fas fa-chevron-down"></i>
                 </button>
-                <div id="profile-dropdown" class="profile-dropdown">
-                    <a href="#" class="dropdown-item">Profile</a>
-                    <a href="#" class="dropdown-item">Settings</a>
-                    <a href="#" class="dropdown-item">Logout</a>
+
+                <div id="profile-dropdown" class="profile-dropdown hidden">
+                    <a href="{% url 'profile' %}">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
-        </div>
 
+
+            {% else %}
+            <!-- Before login: Show login/register -->
+            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+            {% endif %}
+        </div>
     </header>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -100,7 +115,7 @@
                                 onchange="previewProfileImage(event)" />
                         </div>
 
-                        <h3 class="font-semibold text-lg text-gray-900">John Doe</h3>
+                        <h3 class="font-semibold text-lg text-gray-900">Bibek Pandey</h3>
                         <p class="text-gray-500 text-sm">Software Developer</p>
 
                         <!-- Profile Completion -->
@@ -206,11 +221,7 @@
                                     class="w-full px-4 py-3 border rounded-lg" />
                             </div>
 
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Location</label>
-                                <input type="text" placeholder="City, Country"
-                                    class="w-full px-4 py-3 border rounded-lg" />
-                            </div>
+
                         </div>
 
                         <!-- Skills -->
@@ -265,6 +276,21 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function (e) {
+            const dropdown = document.getElementById('profile-dropdown');
+            const button = document.getElementById('profile-button');
+
+            if (!button.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
     </script>
 </body>
 

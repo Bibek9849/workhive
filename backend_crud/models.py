@@ -9,6 +9,8 @@ class User(AbstractUser):
     experience = models.CharField(max_length = 10)
     education = models.CharField(max_length = 10)
     dob = models.CharField(max_length = 10)
+    image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  # ✅ Add this line
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 

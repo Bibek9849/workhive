@@ -33,7 +33,7 @@
         }
 
         .sidebar-link.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #004B8D, #004B8D);
             color: white;
         }
 
@@ -88,23 +88,6 @@
             color: #374151;
             font-weight: 500;
         }
-
-        .auth {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .profile-btn {
-            border: 1px solid #ccc;
-            background: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-        }
-
-        .logo img {
-            height: 40px;
-        }
     </style>
 </head>
 
@@ -112,7 +95,7 @@
 
     <!-- Header -->
     <header>
-        <a href="{% url 'home' %}">
+        <a href="/">
             <div class="logo">
                 <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo">
             </div>
@@ -133,15 +116,32 @@
                 <span id="lang-label">English</span>
             </div>
 
-            <div class="user-menu relative">
-                <button class="profile-btn">
-                    <i class="fas fa-user-circle"></i> John Doe
+            {% if user.is_authenticated %}
+            <!-- After login: Show profile + logout -->
+            <div class="user-menu">
+                <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
+                    {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% else %}
+                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
+                    {% endif %}
+                    <span class="username">{{ user.first_name }}</span>
+                    <i class="fas fa-chevron-down"></i>
                 </button>
-                <div class="profile-dropdown absolute">
-                    <a href="{% url 'profile' %}" class="dropdown-item">Profile</a>
-                    <a href="{% url 'change' %}" class="dropdown-item">Settings</a>
+
+                <div id="profile-dropdown" class="profile-dropdown hidden">
+                    <a href="{% url 'profile' %}">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
+
+
+            {% else %}
+            <!-- Before login: Show login/register -->
+            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+            {% endif %}
         </div>
     </header>
 
@@ -164,7 +164,7 @@
                                 onchange="previewProfileImage(event)" />
                         </div>
 
-                        <h3 class="font-semibold text-lg text-gray-900">John Doe</h3>
+                        <h3 class="font-semibold text-lg text-gray-900">Bibek Pandey</h3>
                         <p class="text-gray-500 text-sm">Software Developer</p>
 
                         <div class="mt-4">
@@ -213,7 +213,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="{% url 'details' %}" class="btn btn-primary">Job Details</a>
+                        <a href="#" class="btn btn-primary">Applied</a>
                     </div>
                 </div>
             </main>
@@ -221,16 +221,6 @@
     </div>
 
     <script>
-        function previewProfileImage(event) {
-            const input = event.target;
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('profile-preview').src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
 
         function toggleLanguage() {
             const label = document.getElementById("lang-label");
@@ -242,6 +232,16 @@
             } else {
                 label.textContent = "English";
                 flag.src = "https://flagcdn.com/16x12/gb.png";
+            }
+        }
+        function previewProfileImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profile-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
     </script>
