@@ -521,8 +521,8 @@
             <!-- After login: Show profile + logout -->
             <div class="user-menu">
                 <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.profile.image %}
-                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
                     {% else %}
                     <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
                     {% endif %}
@@ -536,6 +536,7 @@
                     <a href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
+
 
 
             {% else %}
@@ -570,7 +571,7 @@
             </p>
 
             <div class="steps-grid">
-                <div class="step-card">
+                <!-- <div class="step-card">
                     <div class="step-icon">
                         <i class="fa-solid fa-user-plus"></i>
                     </div>
@@ -586,16 +587,16 @@
                     <h3>Upload Resume</h3>
                     <p>Upload your resume and let employers discover your potential. Showcase your skills and experience
                         professionally.</p>
-                </div>
+                </div> -->
 
-                <div class="step-card">
+                <!-- <div class="step-card">
                     <div class="step-icon">
                         <i class="fa-solid fa-briefcase"></i>
                     </div>
                     <h3>Find Jobs</h3>
                     <p>Browse through thousands of job opportunities and internships. Filter by location, industry, and
                         requirements.</p>
-                </div>
+                </div> -->
 
                 <div class="step-card">
                     <div class="step-icon">

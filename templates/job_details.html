@@ -689,8 +689,8 @@
             <!-- After login: Show profile + logout -->
             <div class="user-menu">
                 <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.profile.image %}
-                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
                     {% else %}
                     <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
                     {% endif %}
@@ -704,6 +704,7 @@
                     <a href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
+
 
 
             {% else %}
@@ -863,27 +864,34 @@
 
             <div class="modal-body">
                 <div class="user-info">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Avatar"
-                        class="user-avatar">
+                    {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="{{ user.get_full_name }}" class="user-avatar">
+                    {% else %}
+                    <img src="{% static 'images/default.png' %}" alt="Default Avatar" class="user-avatar">
+                    {% endif %}
                     <div class="user-details">
-                        <h3>Bibek Pandey</h3>
-                        <p>Software Developer</p>
+                        <h3>{{ user.get_full_name }}</h3>
+                        <p>{{ user.profile.job_title|default:"Software Developer" }}</p>
                     </div>
                 </div>
+
 
                 <form id="applicationForm" onsubmit="submitApplication(event)">
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-envelope mr-2"></i>Email Address
                         </label>
-                        <input type="email" class="form-input" placeholder="your.email@example.com" required>
+                        <input type="email" class="form-input" value="{{ user.email }}" name="email"
+                            placeholder="your.email@example.com" {% if user.is_authenticated %}readonly{% endif %}
+                            required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-phone mr-2"></i>Contact Number
                         </label>
-                        <input type="tel" class="form-input" placeholder="+977 98XXXXXXXX" required>
+                        <input type="tel" class="form-input" value="{{ user.phone_no }}" name="phone"
+                            placeholder="+977 98XXXXXXXX" {% if user.is_authenticated %}readonly{% endif %} required>
                     </div>
 
                     <div class="form-group">
@@ -898,10 +906,12 @@
                             <p class="file-info" id="file-name">No file chosen</p>
                         </div>
                     </div>
+                </form>
 
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane mr-2"></i>Submit Application
-                    </button>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane mr-2"></i>Submit Application
+                </button>
                 </form>
             </div>
         </div>

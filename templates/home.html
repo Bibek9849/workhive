@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load humanize %}
 
 <html lang="en">
 
@@ -43,8 +44,8 @@
             <!-- After login: Show profile + logout -->
             <div class="user-menu">
                 <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.profile.image %}
-                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
                     {% else %}
                     <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
                     {% endif %}
@@ -60,6 +61,7 @@
             </div>
 
 
+
             {% else %}
             <!-- Before login: Show login/register -->
             <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
@@ -71,24 +73,42 @@
 
     <section class="hero">
         <h1 id="hero-title">Find your <span class="blue">new job</span> or <span class="blue">intern</span> today</h1>
-        <div class="search-box">
-            <input type="text" placeholder="Job Title or Company">
-            <select>
-                <option>Select Location</option>
-            </select>
-            <select>
-                <option>Select Category</option>
-            </select>
-            <button class="btn btn-primary">Search</button>
-        </div>
+        <form method="GET" action="{% url 'job' %}">
+            <div class="search-box">
+                <input type="text" name="title" placeholder="Job Title or Company">
+
+                <select name="location">
+                    <option value="">Select Location</option>
+                    {% for location in locations %}
+                    <option value="{{ location }}">{{ location }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="category">
+                    <option value="">Select Category</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+
         <div class="stats">
-            <div><i class="fas fa-briefcase fa-2x blue"></i><strong>25,850</strong>
+            <div>
+                <i class="fas fa-briefcase fa-2x blue"></i>
+                <strong>{{ job_count|intcomma }}</strong>
                 <p>Jobs</p>
             </div>
-            <div><i class="fas fa-user fa-2x blue"></i><strong>10,250</strong>
+            <div>
+                <i class="fas fa-user fa-2x blue"></i>
+                <strong>{{ user_count|intcomma }}</strong>
                 <p>Candidates</p>
             </div>
-            <div><i class="fas fa-building fa-2x blue"></i><strong>18,400</strong>
+            <div>
+                <i class="fas fa-building fa-2x blue"></i>
+                <strong>{{ company_count|intcomma }}</strong>
                 <p>Companies</p>
             </div>
         </div>

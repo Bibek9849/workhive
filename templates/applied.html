@@ -120,8 +120,8 @@
             <!-- After login: Show profile + logout -->
             <div class="user-menu">
                 <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.profile.image %}
-                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
                     {% else %}
                     <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
                     {% endif %}
@@ -135,6 +135,7 @@
                     <a href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
+
 
 
             {% else %}
@@ -152,21 +153,21 @@
             <aside class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <div class="text-center mb-8">
+                        <!-- Editable Profile Image -->
                         <div class="relative w-24 h-24 mx-auto mb-4">
-                            <img id="profile-preview" src="https://randomuser.me/api/portraits/men/75.jpg"
+                            <img id="profile-preview"
+                                src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'images/default.png' %}{% endif %}"
                                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
                                 alt="Profile Picture" />
-                            <label for="profile-upload"
-                                class="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full cursor-pointer shadow-md hover:bg-blue-700 transition">
-                                <i class="fas fa-camera text-white text-xs"></i>
-                            </label>
-                            <input type="file" id="profile-upload" accept="image/*" class="hidden"
-                                onchange="previewProfileImage(event)" />
+
+
                         </div>
 
-                        <h3 class="font-semibold text-lg text-gray-900">Bibek Pandey</h3>
-                        <p class="text-gray-500 text-sm">Software Developer</p>
 
+                        <h3 class="font-semibold text-lg text-gray-900">{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ user.email }}</p>
+
+                        <!-- Profile Completion -->
                         <div class="mt-4">
                             <div class="flex justify-between text-xs text-gray-600 mb-1">
                                 <span>Profile Completion</span>

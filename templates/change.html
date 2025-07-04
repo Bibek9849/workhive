@@ -138,8 +138,8 @@
             <!-- After login: Show profile + logout -->
             <div class="user-menu">
                 <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.profile.image %}
-                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
                     {% else %}
                     <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
                     {% endif %}
@@ -153,6 +153,7 @@
                     <a href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
+
 
 
             {% else %}
@@ -172,19 +173,17 @@
                     <div class="text-center mb-8">
                         <!-- Editable Profile Image -->
                         <div class="relative w-24 h-24 mx-auto mb-4">
-                            <img id="profile-preview" src="https://randomuser.me/api/portraits/men/75.jpg"
+                            <img id="profile-preview"
+                                src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'images/default.png' %}{% endif %}"
                                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
                                 alt="Profile Picture" />
-                            <label for="profile-upload"
-                                class="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full cursor-pointer shadow-md hover:bg-blue-700 transition">
-                                <i class="fas fa-camera text-white text-xs"></i>
-                            </label>
-                            <input type="file" id="profile-upload" accept="image/*" class="hidden"
-                                onchange="previewProfileImage(event)" />
+
+
                         </div>
 
-                        <h3 class="font-semibold text-lg text-gray-900">Bibek Pandey</h3>
-                        <p class="text-gray-500 text-sm">Software Developer</p>
+
+                        <h3 class="font-semibold text-lg text-gray-900">{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ user.email }}</p>
 
                         <!-- Profile Completion -->
                         <div class="mt-4">
@@ -197,7 +196,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Enhanced Navigation Links -->
                     <nav class="space-y-2">
                         <a href="{% url 'profile' %}"
@@ -358,11 +356,12 @@
                         <!-- Action Buttons -->
                         <div class="flex flex-col sm:flex-row gap-4 pt-6">
                             <button type="submit"
-                                class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg hover:shadow-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                class="flex-1 bg-[#004B8D] text-white py-3 px-6 rounded-lg hover:shadow-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 id="updateButton" disabled>
                                 <i class="fas fa-shield-check mr-2"></i>
                                 Update Password
                             </button>
+
 
                         </div>
                     </form>
@@ -372,6 +371,21 @@
     </div>
 
     <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
         function previewProfileImage(event) {
             const input = event.target;
             if (input.files && input.files[0]) {
@@ -403,7 +417,6 @@
             const strengthBar = document.getElementById('strengthBar');
             const strengthText = document.getElementById('strengthText');
 
-            // Check individual requirements
             const requirements = {
                 length: password.length >= 8,
                 uppercase: /[A-Z]/.test(password),
@@ -411,11 +424,9 @@
                 number: /\d/.test(password)
             };
 
-            // Update requirement indicators
             Object.keys(requirements).forEach(req => {
                 const element = document.getElementById(`req-${req}`);
                 const icon = element.querySelector('i');
-
                 if (requirements[req]) {
                     element.classList.remove('requirement-unmet');
                     element.classList.add('requirement-met');
@@ -429,44 +440,38 @@
                 }
             });
 
-            // Calculate strength
-            const metRequirements = Object.values(requirements).filter(Boolean).length;
-            let strength = 0;
-            let strengthLabel = 'Weak';
-            let strengthClass = 'strength-weak';
-
-            if (metRequirements === 4) {
+            const metCount = Object.values(requirements).filter(Boolean).length;
+            let strength = 0, label = 'Weak', css = 'strength-weak';
+            if (metCount === 4) {
                 strength = 100;
-                strengthLabel = 'Strong';
-                strengthClass = 'strength-strong';
-            } else if (metRequirements >= 2) {
+                label = 'Strong';
+                css = 'strength-strong';
+            } else if (metCount >= 2) {
                 strength = 60;
-                strengthLabel = 'Medium';
-                strengthClass = 'strength-medium';
+                label = 'Medium';
+                css = 'strength-medium';
             } else if (password.length > 0) {
                 strength = 30;
             }
 
-            // Update strength bar
             strengthBar.style.width = strength + '%';
-            strengthBar.className = 'password-strength ' + strengthClass;
-            strengthText.textContent = strengthLabel;
+            strengthBar.className = 'password-strength ' + css;
+            strengthText.textContent = label;
 
             checkFormValidity();
             checkPasswordMatch();
         }
 
         function checkPasswordMatch() {
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
             const matchContainer = document.getElementById('passwordMatch');
             const matchSuccess = document.getElementById('matchSuccess');
             const matchError = document.getElementById('matchError');
 
-            if (confirmPassword.length > 0) {
+            if (confirmPass.length > 0) {
                 matchContainer.classList.remove('hidden');
-
-                if (newPassword === confirmPassword) {
+                if (newPass === confirmPass) {
                     matchSuccess.classList.remove('hidden');
                     matchError.classList.add('hidden');
                 } else {
@@ -481,88 +486,102 @@
         }
 
         function checkFormValidity() {
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const updateButton = document.getElementById('updateButton');
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const updateBtn = document.getElementById('updateButton');
 
-            // Check if all requirements are met
             const requirements = {
-                length: newPassword.length >= 8,
-                uppercase: /[A-Z]/.test(newPassword),
-                lowercase: /[a-z]/.test(newPassword),
-                number: /\d/.test(newPassword)
+                length: newPass.length >= 8,
+                uppercase: /[A-Z]/.test(newPass),
+                lowercase: /[a-z]/.test(newPass),
+                number: /\d/.test(newPass)
             };
 
-            const allRequirementsMet = Object.values(requirements).every(Boolean);
-            const passwordsMatch = newPassword === confirmPassword;
-            const allFieldsFilled = currentPassword && newPassword && confirmPassword;
+            const allValid = Object.values(requirements).every(Boolean);
+            const match = newPass === confirm;
+            const filled = current && newPass && confirm;
 
-            updateButton.disabled = !(allFieldsFilled && allRequirementsMet && passwordsMatch);
+            updateBtn.disabled = !(filled && allValid && match);
         }
 
-        // Form submission
         document.getElementById('changePasswordForm').addEventListener('submit', function (e) {
             e.preventDefault();
-
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
             const button = document.getElementById('updateButton');
             const originalText = button.innerHTML;
 
-            // Show loading state
             button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Updating...';
             button.disabled = true;
 
-            // Simulate API call
-            setTimeout(() => {
-                // Show success state
-                button.innerHTML = '<i class="fas fa-check mr-2"></i>Password Updated!';
-                button.classList.remove('from-blue-600', 'to-purple-600');
-                button.classList.add('bg-green-600');
+            fetch("{% url 'change_password' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    currentPassword: current,
+                    newPassword: newPass,
+                    confirmPassword: confirm
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        button.innerHTML = '<i class="fas fa-check mr-2"></i>Password Updated!';
+                        button.classList.remove('from-blue-600', 'to-purple-600');
+                        button.classList.add('bg-green-600');
 
-                // Reset form
-                setTimeout(() => {
-                    document.getElementById('changePasswordForm').reset();
-                    document.getElementById('passwordMatch').classList.add('hidden');
-                    document.getElementById('strengthBar').style.width = '0%';
-                    document.getElementById('strengthText').textContent = 'Weak';
+                        setTimeout(() => {
+                            document.getElementById('changePasswordForm').reset();
+                            document.getElementById('passwordMatch').classList.add('hidden');
+                            document.getElementById('strengthBar').style.width = '0%';
+                            document.getElementById('strengthText').textContent = 'Weak';
 
-                    // Reset requirements
-                    document.querySelectorAll('[id^="req-"]').forEach(req => {
-                        req.classList.remove('requirement-met');
-                        req.classList.add('requirement-unmet');
-                        const icon = req.querySelector('i');
-                        icon.classList.remove('fa-check-circle');
-                        icon.classList.add('fa-times-circle');
-                    });
+                            document.querySelectorAll('[id^="req-"]').forEach(req => {
+                                req.classList.remove('requirement-met');
+                                req.classList.add('requirement-unmet');
+                                const icon = req.querySelector('i');
+                                icon.classList.remove('fa-check-circle');
+                                icon.classList.add('fa-times-circle');
+                            });
 
-                    // Reset button
+                            button.innerHTML = originalText;
+                            button.classList.remove('bg-green-600');
+                            button.classList.add('from-blue-600', 'to-purple-600');
+                            button.disabled = true;
+                        }, 2000);
+                    } else {
+                        alert(data.error || "Something went wrong.");
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Server error occurred.");
                     button.innerHTML = originalText;
-                    button.classList.remove('bg-green-600');
-                    button.classList.add('from-blue-600', 'to-purple-600');
-                    button.disabled = true;
-                }, 2000);
-            }, 1500);
+                    button.disabled = false;
+                });
         });
 
-        // Add event listeners
         document.getElementById('currentPassword').addEventListener('input', checkFormValidity);
         document.getElementById('newPassword').addEventListener('input', checkPasswordStrength);
         document.getElementById('confirmPassword').addEventListener('input', checkPasswordMatch);
+
         function toggleProfileDropdown() {
             const dropdown = document.getElementById('profile-dropdown');
             dropdown.classList.toggle('show');
         }
 
-        // Close dropdown when clicking outside
         window.addEventListener('click', function (e) {
             const dropdown = document.getElementById('profile-dropdown');
             const button = document.getElementById('profile-button');
-
             if (!button.contains(e.target)) {
                 dropdown.classList.remove('show');
             }
         });
     </script>
-</body>
-
-</html>

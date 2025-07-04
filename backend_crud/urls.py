@@ -1,6 +1,8 @@
 from django.urls import include, path
 
-from backend_crud.views import aboutUS_view, applied_view, change_view, contact_view, details_view, home_view, job_view, login_view, logout_view, navbar_view, profile_view, register_view, reset_view
+from backend_crud import views
+from backend_crud.views import aboutUS_view, applied_view, change_password_view, change_view, contact_view, details_view, home_view, job_view, login_view, logout_view, navbar_view, profile_view, register_view, reset_view, upload_profile_image
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -17,6 +19,11 @@ urlpatterns = [
     path('applied', applied_view, name='applied'),  # Use 'home' as the name for the root URL
     path('profile', profile_view, name='profile'),  # Use 'home' as the name for the root URL
     path('logout/', logout_view, name='logout'),
-
+    path('profile/upload-image/', upload_profile_image, name='upload_profile_image'),
+    path('change-password/', change_password_view, name='change_password'),
+path('reset_password/', auth_views.PasswordResetView.as_view(template_name='reset.html'), name='reset_password'),
+    path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name='reset_sent.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='reset_confirm.html'), name='password_reset_confirm'),
+    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='reset_complete.html'), name='password_reset_complete'),
 ]
 

@@ -70,8 +70,8 @@
             <!-- After login: Show profile + logout -->
             <div class="user-menu">
                 <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.profile.image %}
-                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-img">
+                    {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
                     {% else %}
                     <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
                     {% endif %}
@@ -85,6 +85,7 @@
                     <a href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
+
 
 
             {% else %}
@@ -104,19 +105,23 @@
                     <div class="text-center mb-8">
                         <!-- Editable Profile Image -->
                         <div class="relative w-24 h-24 mx-auto mb-4">
-                            <img id="profile-preview" src="https://randomuser.me/api/portraits/men/75.jpg"
+                            <img id="profile-preview"
+                                src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'images/default.png' %}{% endif %}"
                                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
                                 alt="Profile Picture" />
+
                             <label for="profile-upload"
                                 class="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full cursor-pointer shadow-md hover:bg-blue-700 transition">
                                 <i class="fas fa-camera text-white text-xs"></i>
                             </label>
+
                             <input type="file" id="profile-upload" accept="image/*" class="hidden"
-                                onchange="previewProfileImage(event)" />
+                                onchange="uploadProfileImage(event)" />
                         </div>
 
-                        <h3 class="font-semibold text-lg text-gray-900">Bibek Pandey</h3>
-                        <p class="text-gray-500 text-sm">Software Developer</p>
+
+                        <h3 class="font-semibold text-lg text-gray-900">{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ user.email }}</p>
 
                         <!-- Profile Completion -->
                         <div class="mt-4">
@@ -165,20 +170,21 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Full Name</label>
-                                <input type="text" placeholder="Enter full name"
+                                <input type="text" placeholder="Enter full name" value="{{ user.first_name }}"
                                     class="w-full px-4 py-3 border rounded-lg" />
                             </div>
 
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Email Address</label>
-                                <input type="email" placeholder="you@example.com"
+                                <input type="email" placeholder="you@example.com" value="{{ user.email }}"
                                     class="w-full px-4 py-3 border rounded-lg" />
                             </div>
 
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Date of Birth</label>
-                                <input type="date" class="w-full px-4 py-3 border rounded-lg" />
+                                <input type="date" value="{{ user.dob }}" class="w-full px-4 py-3 border rounded-lg" />
                             </div>
+
                         </div>
 
                         <!-- Professional Info -->
@@ -217,11 +223,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Phone</label>
-                                <input type="tel" placeholder="+977 98XXXXXXXX"
+                                <input type="tel" placeholder="+977 98XXXXXXXX" value="{{ user.phone_no }}"
                                     class="w-full px-4 py-3 border rounded-lg" />
                             </div>
-
-
                         </div>
 
                         <!-- Skills -->
@@ -291,6 +295,60 @@
                 dropdown.classList.remove('show');
             }
         });
+        function uploadProfileImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+
+                // Show preview immediately
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profile-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Prepare form data to send to backend
+                const formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/profile/upload-image/', {  // You'll create this URL endpoint
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')  // get CSRF token function below
+                    },
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Error uploading image');
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error uploading image');
+                        console.error(error);
+                    });
+            }
+        }
+
+        // Utility to get CSRF cookie (needed for POST requests)
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
     </script>
 </body>
 
