@@ -4,12 +4,13 @@ from django.contrib import messages
 from django.contrib.auth import login, logout,authenticate
 
 from backend_crud.forms import ProfileUpdateForm
-from backend_crud.models import Category, Company, Job, Skill, UserSkill
+from backend_crud.models import Category, Company, Job,JobApplication, Skill, UserSkill
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Q
+from django.views.decorators.http import require_POST
 
 
 # ✅ Correct:
@@ -128,8 +129,13 @@ def change_view(request):
     return render(request, 'change.html')
 
 
+
+@login_required
 def applied_view(request):
-    return render(request, 'applied.html')
+    user = request.user
+    applications = JobApplication.objects.filter(user=user).select_related('job')
+    return render(request, 'applied.html', {'applications': applications})
+
 def profile_view(request):
     user = request.user
     if not user.is_authenticated:
@@ -189,3 +195,37 @@ def change_password_view(request):
         return JsonResponse({'success': True, 'message': 'Password changed successfully.'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+
+
+@login_required
+@require_POST
+def apply_job_view(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    user = request.user
+
+    # Check if user already applied for this job
+    if JobApplication.objects.filter(user=user, job=job).exists():
+        return JsonResponse({
+            'success': False,
+            'message': 'You have already applied for this job.'
+        })
+
+    phone = request.POST.get('phone')
+    resume = request.FILES.get('resume')
+
+    # Check if phone or resume is missing
+    if not phone:
+        return JsonResponse({'success': False, 'message': 'Phone number is required.'})
+
+    if not resume:
+        return JsonResponse({'success': False, 'message': 'Resume file is required.'})
+
+    # Update user's phone number if empty or different
+    if not user.phone_no or user.phone_no != phone:
+        user.phone_no = phone
+        user.save()
+
+    # Save application
+    JobApplication.objects.create(user=user, job=job, phone=phone, resume=resume)
+
+    return JsonResponse({'success': True, 'message': 'Application submitted successfully!'})

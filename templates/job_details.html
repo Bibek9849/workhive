@@ -736,8 +736,15 @@
                             <div class="job-meta">
                                 <span><i class="fas fa-laptop-code"></i> {{ job.category.name }}</span>
                                 <span><i class="fas fa-clock"></i> {{ job.job_type.name }}</span>
-                                <span><i class="fas fa-money-bill"></i> Rs {{ job.salary_min }} - Rs {{ job.salary_max
-                                    }}</span>
+                                <span>
+                                    <i class="fas fa-money-bill"></i>
+                                    {% if job.salary_max %}
+                                    Rs {{ job.salary_min }} - Rs {{ job.salary_max }}
+                                    {% else %}
+                                    Rs {{ job.salary_min }}+
+                                    {% endif %}
+                                </span>
+
                                 <span><i class="fas fa-map-marker-alt"></i> {{ job.company.address }}</span>
                             </div>
                         </div>
@@ -864,10 +871,10 @@
 
             <div class="modal-body">
                 <div class="user-info">
-                    {% if user.profile.image %}
-                    <img src="{{ user.profile.image.url }}" alt="{{ user.get_full_name }}" class="user-avatar">
+                    {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
                     {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="Default Avatar" class="user-avatar">
+                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
                     {% endif %}
                     <div class="user-details">
                         <h3>{{ user.get_full_name }}</h3>
@@ -891,7 +898,8 @@
                             <i class="fas fa-phone mr-2"></i>Contact Number
                         </label>
                         <input type="tel" class="form-input" value="{{ user.phone_no }}" name="phone"
-                            placeholder="+977 98XXXXXXXX" {% if user.is_authenticated %}readonly{% endif %} required>
+                            placeholder="+977 98XXXXXXXX" required>
+
                     </div>
 
                     <div class="form-group">
@@ -906,12 +914,11 @@
                             <p class="file-info" id="file-name">No file chosen</p>
                         </div>
                     </div>
-                </form>
 
 
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-paper-plane mr-2"></i>Submit Application
-                </button>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane mr-2"></i>Submit Application
+                    </button>
                 </form>
             </div>
         </div>
@@ -949,14 +956,36 @@
 
         function submitApplication(event) {
             event.preventDefault();
-            const form = document.getElementById('applicationForm');
-            form.classList.add('success-animation');
 
-            setTimeout(() => {
-                alert('✅ Application submitted successfully!');
-                window.location.href = '/profile'; // Redirect to profile page
-            }, 800);
+            const resume = document.getElementById('resume').files[0];
+            const phone = document.querySelector('input[name="phone"]').value;
+
+            const formData = new FormData();
+            formData.append('resume', resume);
+            formData.append('phone', phone);
+
+            fetch(`/apply/{{ job.id }}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        closeModal();
+                    } else {
+                        alert(data.message || "Something went wrong.");
+                    }
+                })
+                .catch(err => {
+                    alert("Failed to submit application.");
+                    console.error(err);
+                });
         }
+
 
 
 

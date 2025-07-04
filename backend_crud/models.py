@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -72,3 +73,13 @@ class Job(models.Model):
 
     def __str__(self):
         return self.title
+
+class JobApplication(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    phone = models.CharField(max_length=20)
+    resume = models.FileField(upload_to='resumes/')
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.job.title}"

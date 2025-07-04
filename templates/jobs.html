@@ -403,8 +403,14 @@
                                 <div class="job-meta">
                                     <span><i class="fas fa-laptop-code"></i> {{ job.category.name }}</span>
                                     <span><i class="fas fa-clock"></i> {{ job.job_type.name }}</span>
-                                    <span><i class="fas fa-money-bill"></i> Rs {{ job.salary_min }} - Rs {{
-                                        job.salary_max }}</span>
+                                    <span>
+                                        <i class="fas fa-money-bill"></i>
+                                        {% if job.salary_max %}
+                                        Rs {{ job.salary_min }} - Rs {{ job.salary_max }}
+                                        {% else %}
+                                        Rs {{ job.salary_min }}+
+                                        {% endif %}
+                                    </span>
 
                                     <span><i class="fas fa-map-marker-alt"></i> {{ job.company.address }}</span>
                                 </div>

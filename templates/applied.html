@@ -199,25 +199,34 @@
             <!-- Change Password Section -->
             <main class="lg:col-span-3">
                 <div class="bg-white rounded-2xl shadow-lg p-8">
-                    <div class="job-card">
-                        <div class="posted">10 min ago</div>
-                        <div class="job-info-left">
-                            <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Python Icon">
+                    {% if applications %}
+                    {% for app in applications %}
+                    <div class="job-card mb-6">
+                        <div class="posted">{{ app.applied_at|timesince }} ago</div>
+                        <div class="job-info-left flex items-center gap-4">
+                            <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Job Icon"
+                                class="w-12 h-12">
                             <div class="job-details">
-                                <h3>Python Developer</h3>
-                                <p>Softwarica College of IT and E-Commerce</p>
-                                <div class="job-meta">
-                                    <span><i class="fas fa-laptop-code"></i> IT</span>
-                                    <span><i class="fas fa-clock"></i> Internship</span>
-                                    <span><i class="fas fa-money-bill"></i> Rs 15000 - Rs 40000</span>
-                                    <span><i class="fas fa-map-marker-alt"></i> Delhibazzar, Kathmandu</span>
+                                <h3 class="text-lg font-semibold">{{ app.job.title }}</h3>
+                                <p>{{ app.job.company.name }}</p>
+                                <div class="job-meta flex flex-wrap gap-3 text-sm text-gray-600 mt-1">
+                                    <span><i class="fas fa-laptop-code"></i> {{ app.job.category.name }}</span>
+                                    <span><i class="fas fa-clock"></i> {{ app.job.job_type.name }}</span>
+                                    <span><i class="fas fa-money-bill"></i> Rs {{ app.job.min_salary }} - Rs {{
+                                        app.job.max_salary }}</span>
+                                    <span><i class="fas fa-map-marker-alt"></i> {{ app.job.location }}</span>
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="btn btn-primary">Applied</a>
+                        <button disabled class="btn btn-primary mt-4 cursor-not-allowed opacity-70">Applied</button>
                     </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-center text-gray-500">You have not applied to any jobs yet.</p>
+                    {% endif %}
                 </div>
             </main>
+
         </div>
     </div>
 
