@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+
 ]
 
 ROOT_URLCONF = 'workhive.urls'
@@ -114,7 +116,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 LANGUAGES = [
     ('en', 'English'),
-    ('ne', 'Nepali'),  # Adding Nepali
+    ('ne', 'नेपाली'),
     ('es', 'Spanish'),
     ('fr', 'French'),
     ('de', 'German'),
@@ -122,7 +124,7 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),  # Directory where translations will be stored
+    BASE_DIR / 'locale',
 ]
 
 USE_TZ = True

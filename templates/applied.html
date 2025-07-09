@@ -94,57 +94,8 @@
 <body class="bg-gray-50 min-h-screen">
 
     <!-- Header -->
-    <header>
-        <a href="/">
-            <div class="logo">
-                <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo">
-            </div>
-        </a>
+    {% include 'navbar.html' %}
 
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'job' %}">Jobs</a></li>
-                <li><a href="{% url 'about' %}">About Us</a></li>
-                <li><a href="{% url 'contact' %}">Contact Us</a></li>
-            </ul>
-        </nav>
-
-        <div class="auth">
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
-                <span id="lang-label">English</span>
-            </div>
-
-            {% if user.is_authenticated %}
-            <!-- After login: Show profile + logout -->
-            <div class="user-menu">
-                <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.image %}
-                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
-                    {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
-                    {% endif %}
-                    <span class="username">{{ user.first_name }}</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-
-                <div id="profile-dropdown" class="profile-dropdown hidden">
-                    <a href="{% url 'profile' %}">Profile</a>
-                    <a href="#">Settings</a>
-                    <a href="{% url 'logout' %}">Logout</a>
-                </div>
-            </div>
-
-
-
-            {% else %}
-            <!-- Before login: Show login/register -->
-            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
-            {% endif %}
-        </div>
-    </header>
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

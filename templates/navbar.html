@@ -1,21 +1,261 @@
-<!-- navbar.html -->
+<!-- templates/includes/navbar.html -->
+{% load static %}
+
+<style>
+    header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 10;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+        gap: 20px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .auth {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .language-toggle {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .language-toggle img {
+        width: 20px;
+        height: 15px;
+    }
+
+    /* Profile dropdown */
+    .user-menu {
+        position: relative;
+    }
+
+    .profile-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .profile-img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .profile-dropdown {
+        position: absolute;
+        top: 110%;
+        right: 0;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        overflow: hidden;
+        min-width: 120px;
+    }
+
+    .profile-dropdown a {
+        display: block;
+        padding: 8px 12px;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .profile-dropdown a:hover {
+        background: #f0f0f0;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 6px 14px;
+        border-radius: 4px;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+    .btn-outline {
+        background: none;
+        border: 1.5px solid #007bff;
+        color: #007bff;
+    }
+
+    /* Hamburger */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 4px;
+    }
+
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background: #333;
+        border-radius: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        nav ul {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: white;
+            flex-direction: column;
+            width: 180px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            padding: 10px 0;
+            display: none;
+            z-index: 9;
+        }
+
+        nav ul.show {
+            display: flex;
+        }
+
+        nav ul li {
+            padding: 10px 20px;
+        }
+
+        .auth {
+            gap: 10px;
+        }
+
+        /* Show hamburger */
+        .hamburger {
+            display: flex;
+        }
+    }
+</style>
+
 <header>
-    <div class="nav-container">
-        <div class="logo">WORKHIVE</div>
-        <nav>
-            <ul>
-                <li>Home</li>
-                <li>Jobs</li>
-                <li>About Us</li>
-                <li>Contact Us</li>
-            </ul>
-        </nav>
-        <div class="auth-controls">
-            <select>
-                <option>English</option>
-            </select>
-            <button class="login" onclick="window.location.href='login'">Login</button>
-            <button class="register">Register</button>
+    <a href="/">
+        <div class="logo">
+            <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo" />
+        </div>
+    </a>
+
+    <nav>
+        <ul id="nav-menu">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'job' %}">Jobs</a></li>
+            <li><a href="{% url 'about' %}">About Us</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="auth">
+        <div class="language-toggle" onclick="toggleLanguage()">
+            <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language" />
+            <span id="lang-label">English</span>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="user-menu">
+            <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
+                {% if user.image %}
+                <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img" />
+                {% else %}
+                <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img" />
+                {% endif %}
+                <span class="username">{{ user.first_name }}</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+
+            <div id="profile-dropdown" class="profile-dropdown hidden">
+                <a href="{% url 'profile' %}">Profile</a>
+                <a href="#">Settings</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+        </div>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
+        <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+        {% endif %}
+
+        <!-- Hamburger Menu Button -->
+        <div class="hamburger" id="hamburger" onclick="toggleNavMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
     </div>
 </header>
+
+<script>
+    // Toggle profile dropdown
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profile-dropdown');
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Toggle nav menu on small screens
+    function toggleNavMenu() {
+        const menu = document.getElementById('nav-menu');
+        menu.classList.toggle('show');
+    }
+
+    // Language toggle placeholder function (implement your language switch logic)
+    function toggleLanguage() {
+        const flag = document.getElementById('lang-flag');
+        const label = document.getElementById('lang-label');
+        if (label.textContent === 'English') {
+            label.textContent = 'Nepali';
+            flag.src = "https://flagcdn.com/16x12/np.png";
+        } else {
+            label.textContent = 'English';
+            flag.src = "https://flagcdn.com/16x12/gb.png";
+        }
+    }
+
+    // Optional: close dropdowns if clicking outside
+    document.addEventListener('click', function (event) {
+        const profileBtn = document.getElementById('profile-button');
+        const dropdown = document.getElementById('profile-dropdown');
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        if (!profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.add('hidden');
+        }
+
+        // Optionally, close nav menu if click outside hamburger and nav menu
+        if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+            navMenu.classList.remove('show');
+        }
+    });
+</script>

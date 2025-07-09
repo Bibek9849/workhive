@@ -27,114 +27,6 @@
             overflow-x: hidden;
         }
 
-        /* Header Styles */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            padding: 1rem 2rem;
-            transition: all 0.3s ease;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2563eb;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        nav a {
-            color: #374151;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        nav a:hover {
-            color: #2563eb;
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #2563eb;
-            transition: width 0.3s ease;
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        .auth {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .language-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: #f8fafc;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .language-toggle:hover {
-            background: #e2e8f0;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            display: inline-block;
-        }
-
 
         /* Hero Section */
         .hero {
@@ -254,7 +146,15 @@
             color: #6b7280;
             max-width: 600px;
             margin: 0 auto;
+            text-align: justify;
+            /* Justify text for neat edges */
+            padding: 0 1.5rem;
+            /* Add horizontal padding */
+            line-height: 1.6;
+            box-sizing: border-box;
+            /* Include padding inside width */
         }
+
 
         .about-image {
             width: 100%;
@@ -495,57 +395,8 @@
 </head>
 
 <body>
-    <header>
-        <a href="/">
-            <div class="logo">
-                <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo">
-            </div>
-        </a>
+    {% include 'navbar.html' %}
 
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'job' %}">Jobs</a></li>
-                <li><a href="{% url 'about' %}">About Us</a></li>
-                <li><a href="{% url 'contact' %}">Contact Us</a></li>
-            </ul>
-        </nav>
-
-        <div class="auth">
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
-                <span id="lang-label">English</span>
-            </div>
-
-            {% if user.is_authenticated %}
-            <!-- After login: Show profile + logout -->
-            <div class="user-menu">
-                <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.image %}
-                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
-                    {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
-                    {% endif %}
-                    <span class="username">{{ user.first_name }}</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-
-                <div id="profile-dropdown" class="profile-dropdown hidden">
-                    <a href="{% url 'profile' %}">Profile</a>
-                    <a href="#">Settings</a>
-                    <a href="{% url 'logout' %}">Logout</a>
-                </div>
-            </div>
-
-
-
-            {% else %}
-            <!-- Before login: Show login/register -->
-            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
-            {% endif %}
-        </div>
-    </header>
 
     <main>
         <section class="welcome-section">
@@ -571,7 +422,7 @@
             </p>
 
             <div class="steps-grid">
-                <!-- <div class="step-card">
+                <div class="step-card">
                     <div class="step-icon">
                         <i class="fa-solid fa-user-plus"></i>
                     </div>
@@ -587,16 +438,16 @@
                     <h3>Upload Resume</h3>
                     <p>Upload your resume and let employers discover your potential. Showcase your skills and experience
                         professionally.</p>
-                </div> -->
+                </div>
 
-                <!-- <div class="step-card">
+                <div class="step-card">
                     <div class="step-icon">
                         <i class="fa-solid fa-briefcase"></i>
                     </div>
                     <h3>Find Jobs</h3>
                     <p>Browse through thousands of job opportunities and internships. Filter by location, industry, and
                         requirements.</p>
-                </div> -->
+                </div>
 
                 <div class="step-card">
                     <div class="step-icon">

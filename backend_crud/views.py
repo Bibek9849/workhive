@@ -51,12 +51,11 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, "Logged in successfully!")
-            return redirect('home')
+            messages.success(request, "Logged in successfully.")
+            return render(request, 'login.html', {'redirect_after_login': True})
         else:
             messages.error(request, "Invalid email or password.")
             return redirect('login')
-  # redirect to login page on failure
 
     return render(request, 'login.html')
 def logout_view(request):
@@ -77,6 +76,9 @@ def home_view(request):
     # Fetch all categories
     categories = Category.objects.all()
 
+    # Check if just logged in
+    just_logged_in = request.session.pop('just_logged_in', False)
+
     return render(request, 'home.html', {
         'jobs': jobs,
         'job_count': job_count,
@@ -84,7 +86,9 @@ def home_view(request):
         'company_count': company_count,
         'locations': locations,
         'categories': categories,
+        'just_logged_in': just_logged_in,
     })
+
 def navbar_view(request):
     return render(request, 'navbar.html')
 
@@ -94,10 +98,16 @@ def aboutUS_view(request):
 def contact_view(request):
     return render(request, 'contact_us.html')
 
+
 def details_view(request, job_id):
     job = get_object_or_404(Job, pk=job_id)
-    return render(request, 'job_details.html', {'job': job})
+    related_jobs = Job.objects.filter(category=job.category).exclude(pk=job_id)[:4]  # max 4 related jobs
 
+    context = {
+        'job': job,
+        'related_jobs': related_jobs,
+    }
+    return render(request, 'job_details.html', context)
 def job_view(request):
     title_query = request.GET.get('title', '')
     location_query = request.GET.get('location', '')

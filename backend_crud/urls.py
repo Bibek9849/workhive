@@ -3,6 +3,7 @@ from django.urls import include, path
 from backend_crud import views
 from backend_crud.views import aboutUS_view, applied_view, apply_job_view, change_password_view, change_view, contact_view, details_view, home_view, job_view, login_view, logout_view, navbar_view, profile_view, register_view, reset_view, upload_profile_image
 from django.contrib.auth import views as auth_views
+from django.conf.urls.i18n import set_language
 
 
 urlpatterns = [
@@ -26,6 +27,7 @@ path('reset_password/', auth_views.PasswordResetView.as_view(template_name='rese
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='reset_confirm.html'), name='password_reset_confirm'),
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='reset_complete.html'), name='password_reset_complete'),
     path('apply/<int:job_id>/', apply_job_view, name='apply_job'),
+    path('i18n/setlang/', set_language, name='set_language'),
 
 ]
 

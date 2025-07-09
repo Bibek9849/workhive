@@ -534,6 +534,17 @@
                 document.getElementById('password-error').textContent = '';
             }
         });
+        // After login success, show popup and then redirect
+        window.addEventListener('DOMContentLoaded', () => {
+            const successPopup = document.querySelector('.popup-success');
+            if (successPopup) {
+                // Optional: Show a loader or overlay before redirect
+                setTimeout(() => {
+                    window.location.href = "{% url 'home' %}";
+                }, 1000); // 2 seconds delay
+            }
+        });
+
     </script>
 </body>
 

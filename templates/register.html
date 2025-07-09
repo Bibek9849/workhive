@@ -596,6 +596,14 @@
                 this.classList.remove('error');
             }
         });
+        document.getElementById('password').addEventListener('input', function () {
+            const password = this.value;
+            if (password.length >= 8) {
+                document.getElementById('password-error').textContent = '';
+                this.classList.remove('error');
+            }
+        });
+
     </script>
 </body>
 

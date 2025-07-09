@@ -16,60 +16,96 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
 </head>
+<style>
+    .jobs-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .job-cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .job-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .job-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .job-card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .job-logo img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 15px;
+    }
+
+    .job-card-title h3 {
+        font-size: 1.1rem;
+        margin: 0;
+        color: #2c3e50;
+    }
+
+    .company-name {
+        font-size: 0.95rem;
+        color: #666;
+    }
+
+    .job-card-body .job-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 15px;
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    .job-card-body .job-meta span i {
+        margin-right: 6px;
+        color: #2d7df4;
+    }
+
+    .job-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .job-card-footer .posted {
+        font-size: 0.85rem;
+        color: #888;
+    }
+
+    .job-card-footer .btn {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+    }
+</style>
 
 <body>
-    <header>
-        <a href="/">
-            <div class="logo">
-                <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo">
-            </div>
-        </a>
-
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'job' %}">Jobs</a></li>
-                <li><a href="{% url 'about' %}">About Us</a></li>
-                <li><a href="{% url 'contact' %}">Contact Us</a></li>
-            </ul>
-        </nav>
-
-        <div class="auth">
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
-                <span id="lang-label">English</span>
-            </div>
-
-            {% if user.is_authenticated %}
-            <!-- After login: Show profile + logout -->
-            <div class="user-menu">
-                <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.image %}
-                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
-                    {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
-                    {% endif %}
-                    <span class="username">{{ user.first_name }}</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-
-                <div id="profile-dropdown" class="profile-dropdown hidden">
-                    <a href="{% url 'profile' %}">Profile</a>
-                    <a href="#">Settings</a>
-                    <a href="{% url 'logout' %}">Logout</a>
-                </div>
-            </div>
-
-
-
-            {% else %}
-            <!-- Before login: Show login/register -->
-            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
-            {% endif %}
-        </div>
-    </header>
-
+    {% include 'navbar.html' %}
 
     <section class="hero">
         <h1 id="hero-title">Find your <span class="blue">new job</span> or <span class="blue">intern</span> today</h1>
@@ -120,19 +156,24 @@
             <a href="{% url 'job' %}">View all</a>
         </div>
 
-        {% for job in jobs %}
-        <div class="job-card">
-            <div class="posted">{{ job.posted_at|timesince }} ago</div>
-            <div class="job-info-left">
-                {% if job.company.logo %}
-                <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo">
-                {% else %}
-                <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Default Logo">
-                {% endif %}
+        <div class="job-cards-container">
+            {% for job in jobs|slice:":4" %}
+            <div class="job-card">
+                <div class="job-card-header">
+                    <div class="job-logo">
+                        {% if job.company.logo %}
+                        <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo">
+                        {% else %}
+                        <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Default Logo">
+                        {% endif %}
+                    </div>
+                    <div class="job-card-title">
+                        <h3>{{ job.title }}</h3>
+                        <p class="company-name">{{ job.company.name }}</p>
+                    </div>
+                </div>
 
-                <div class="job-details">
-                    <h3>{{ job.title }}</h3>
-                    <p>{{ job.company.name }}</p>
+                <div class="job-card-body">
                     <div class="job-meta">
                         <span><i class="fas fa-laptop-code"></i> {{ job.category.name }}</span>
                         <span><i class="fas fa-clock"></i> {{ job.job_type.name }}</span>
@@ -140,13 +181,16 @@
                         <span><i class="fas fa-map-marker-alt"></i> {{ job.company.address }}</span>
                     </div>
                 </div>
-            </div>
-            <a href="{% url 'details' job.id %}" class="btn btn-primary">Job Details</a>
-        </div>
-        {% empty %}
-        <p>No recent jobs found.</p>
-        {% endfor %}
 
+                <div class="job-card-footer">
+                    <span class="posted">{{ job.posted_at|timesince }} ago</span>
+                    <a href="{% url 'details' job.id %}" class="btn btn-primary">Job Details</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No recent jobs found.</p>
+            {% endfor %}
+        </div>
 
 
     </section>
@@ -252,9 +296,20 @@
         });
     </script>
 
-
-
+    {% if just_logged_in %}
+    <div class="popup popup-success" id="login-success-popup">
+        Logged in successfully!
+        <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            const popup = document.getElementById('login-success-popup');
+            if (popup) popup.style.display = 'none';
+        }, 5000);
     </script>
+    {% endif %}
+
+
 </body>
 
 </html>

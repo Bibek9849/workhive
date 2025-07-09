@@ -634,6 +634,94 @@
             }
         }
 
+        .job-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            /* smaller min width */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .job-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            /* smaller font */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            height: 260px;
+            /* fixed smaller height */
+        }
+
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .job-logo img {
+            width: 40px;
+            /* smaller logo */
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 10px;
+        }
+
+        .job-card-title h3 {
+            font-size: 1rem;
+            /* smaller title */
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .company-name {
+            font-size: 0.8rem;
+            /* smaller company text */
+            color: #666;
+        }
+
+        .job-card-body .job-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+
+        .job-card-body .job-meta span i {
+            margin-right: 5px;
+            color: #2d7df4;
+        }
+
+        .job-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            /* smaller footer */
+        }
+
+        .job-card-footer .posted {
+            color: #888;
+        }
+
+        .job-card-footer .btn {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+
+
         @media (max-width: 480px) {
             .footer-nav {
                 flex-direction: column;
@@ -794,44 +882,44 @@
                 <!-- Related Jobs -->
                 <div class="bg-white p-6 rounded shadow">
                     <h3 class="text-lg font-semibold mb-4">Related Jobs</h3>
-                    <div class="space-y-4">
+                    <div class="job-cards-container">
+                        {% for job in related_jobs %}
                         <div class="job-card">
-                            <div class="posted">10 min ago</div>
-                            <div class="job-info-left">
-                                <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Python Icon">
-                                <div class="job-details">
-                                    <h3>Python Developer</h3>
-                                    <p>Softwarica College of IT and E-Commerce</p>
-                                    <div class="job-meta">
-                                        <span><i class="fas fa-laptop-code"></i> IT</span>
-                                        <span><i class="fas fa-clock"></i> Internship</span>
-                                        <span><i class="fas fa-money-bill"></i> Rs 15000 - Rs 40000</span>
-                                        <span><i class="fas fa-map-marker-alt"></i> Delhibazzar, Kathmandu</span>
-                                    </div>
+                            <div class="job-card-header">
+                                <div class="job-logo">
+                                    {% if job.company.logo %}
+                                    <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo">
+                                    {% else %}
+                                    <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Default Logo">
+                                    {% endif %}
+                                </div>
+                                <div class="job-card-title">
+                                    <h3>{{ job.title }}</h3>
+                                    <p class="company-name">{{ job.company.name }}</p>
                                 </div>
                             </div>
-                            <button class="btn btn-primary">Job Details</button>
-                        </div>
 
-                        <div class="job-card">
-                            <div class="posted">1 hrs ago</div>
-                            <div class="job-info-left">
-                                <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" alt="UI UX Icon">
-                                <div class="job-details">
-                                    <h3>UI-UX Developer</h3>
-                                    <p>Softwarica College of IT and E-Commerce</p>
-                                    <div class="job-meta">
-                                        <span><i class="fas fa-laptop-code"></i> IT</span>
-                                        <span><i class="fas fa-clock"></i> Full time</span>
-                                        <span><i class="fas fa-money-bill"></i> Rs 15000 - Rs 40000</span>
-                                        <span><i class="fas fa-map-marker-alt"></i> Delhibazzar, Kathmandu</span>
-                                    </div>
+                            <div class="job-card-body">
+                                <div class="job-meta">
+                                    <span><i class="fas fa-laptop-code"></i> {{ job.category.name }}</span>
+                                    <span><i class="fas fa-clock"></i> {{ job.job_type.name }}</span>
+                                    <span><i class="fas fa-money-bill"></i> Rs {{ job.salary_min }} - Rs {{
+                                        job.salary_max }}</span>
+                                    <span><i class="fas fa-map-marker-alt"></i> {{ job.company.address }}</span>
                                 </div>
                             </div>
-                            <button class="btn btn-primary">Job Details</button>
+
+                            <div class="job-card-footer">
+                                <span class="posted">{{ job.posted_at|timesince }} ago</span>
+                                <a href="{% url 'details' job.id %}" class="btn btn-primary">Job Details</a>
+                            </div>
                         </div>
+                        {% empty %}
+                        <p>No related jobs found.</p>
+                        {% endfor %}
                     </div>
                 </div>
+
             </div>
 
             <!-- Right Sidebar -->
