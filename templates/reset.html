@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <title>Sign Up</title>
     <style>
         * {
@@ -170,14 +172,33 @@
             <h2>Reset Password</h2>
             <p class="subheading">Please enter email to continue to reset your account.</p>
 
+            <!-- Show popup message if any -->
+            {% if messages %}
+            <script>
+                {% for message in messages %}
+                Swal.fire({
+                    title: "{{ message.tags|capfirst }}",
+                    text: "{{ message|escapejs }}",
+                    icon: "{{ message.tags }}", // can be 'success', 'error', etc.
+                    confirmButtonText: 'OK'
+                });
+                {% endfor %}
+            </script>
+            {% endif %}
+
+            <!-- Reset Password Form -->
+
+
             <form method="POST">
                 {% csrf_token %}
                 <label for="email">Email</label>
-                {{ form.email }}
+                <input type="email" name="email" id="email" required />
                 <button class="btn" type="submit">Send Reset Link</button>
-            </form>
 
-            <button class="btn" type="submit">Reset</button>
+            </form>
+            <form action="{% url 'home' %}" method="get">
+                <button class="btn" type="submit">Back</button>
+            </form>
 
 
             <!-- <button class="btn" type="submit">Back</button> -->

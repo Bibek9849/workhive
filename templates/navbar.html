@@ -1,16 +1,42 @@
-<!-- templates/includes/navbar.html -->
 {% load static %}
 
 <style>
+    :root {
+        --bg-color: #fff;
+        --text-color: #111;
+        --nav-bg: #fff;
+        --nav-text: #333;
+        --btn-bg: #004B8D;
+        --btn-text: white;
+        --outline-color: #004B8D;
+    }
+
+    [data-theme='dark'] {
+        --bg-color: #1a202c;
+        --text-color: #f1f5f9;
+        --nav-bg: #2d3748;
+        --nav-text: #e2e8f0;
+        --btn-bg: #2b6cb0;
+        --btn-text: white;
+        --outline-color: #e2e8f0;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+    }
+
     header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 10px 20px;
-        background: #fff;
+        background: var(--nav-bg);
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 10;
+        transition: background-color 0.3s;
     }
 
     .logo img {
@@ -25,8 +51,9 @@
 
     nav ul li a {
         text-decoration: none;
-        color: #333;
+        color: var(--nav-text);
         font-weight: 500;
+        transition: color 0.3s;
     }
 
     .auth {
@@ -40,6 +67,7 @@
         display: flex;
         align-items: center;
         gap: 5px;
+        color: var(--nav-text);
     }
 
     .language-toggle img {
@@ -47,7 +75,13 @@
         height: 15px;
     }
 
-    /* Profile dropdown */
+    .dark-toggle {
+        cursor: pointer;
+        font-size: 18px;
+        color: var(--nav-text);
+        transition: color 0.3s;
+    }
+
     .user-menu {
         position: relative;
     }
@@ -60,7 +94,7 @@
         align-items: center;
         gap: 8px;
         font-weight: 500;
-        color: #333;
+        color: var(--nav-text);
     }
 
     .profile-img {
@@ -74,25 +108,29 @@
         position: absolute;
         top: 110%;
         right: 0;
-        background: white;
+        background: var(--nav-bg);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         border-radius: 4px;
         overflow: hidden;
         min-width: 120px;
+        display: none;
+    }
+
+    .profile-dropdown.show {
+        display: block;
     }
 
     .profile-dropdown a {
         display: block;
         padding: 8px 12px;
         text-decoration: none;
-        color: #333;
+        color: var(--nav-text);
     }
 
     .profile-dropdown a:hover {
-        background: #f0f0f0;
+        background: rgba(255, 255, 255, 0.1);
     }
 
-    /* Buttons */
     .btn {
         padding: 6px 14px;
         border-radius: 4px;
@@ -101,18 +139,17 @@
     }
 
     .btn-primary {
-        background-color: #007bff;
-        color: white;
+        background-color: var(--btn-bg);
+        color: var(--btn-text);
         border: none;
     }
 
     .btn-outline {
         background: none;
-        border: 1.5px solid #007bff;
-        color: #007bff;
+        border: 1.5px solid var(--outline-color);
+        color: var(--outline-color);
     }
 
-    /* Hamburger */
     .hamburger {
         display: none;
         flex-direction: column;
@@ -123,17 +160,17 @@
     .hamburger span {
         width: 25px;
         height: 3px;
-        background: #333;
+        background: var(--nav-text);
         border-radius: 2px;
+        transition: background 0.3s;
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
         nav ul {
             position: absolute;
             top: 60px;
             right: 0;
-            background: white;
+            background: var(--nav-bg);
             flex-direction: column;
             width: 180px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -151,11 +188,6 @@
             padding: 10px 20px;
         }
 
-        .auth {
-            gap: 10px;
-        }
-
-        /* Show hamburger */
         .hamburger {
             display: flex;
         }
@@ -184,6 +216,10 @@
             <span id="lang-label">English</span>
         </div>
 
+        <div class="dark-toggle" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </div>
+
         {% if user.is_authenticated %}
         <div class="user-menu">
             <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
@@ -196,7 +232,7 @@
                 <i class="fas fa-chevron-down"></i>
             </button>
 
-            <div id="profile-dropdown" class="profile-dropdown hidden">
+            <div id="profile-dropdown" class="profile-dropdown">
                 <a href="{% url 'profile' %}">Profile</a>
                 <a href="#">Settings</a>
                 <a href="{% url 'logout' %}">Logout</a>
@@ -207,7 +243,6 @@
         <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
         {% endif %}
 
-        <!-- Hamburger Menu Button -->
         <div class="hamburger" id="hamburger" onclick="toggleNavMenu()">
             <span></span>
             <span></span>
@@ -217,19 +252,16 @@
 </header>
 
 <script>
-    // Toggle profile dropdown
     function toggleProfileDropdown() {
         const dropdown = document.getElementById('profile-dropdown');
-        dropdown.classList.toggle('hidden');
+        dropdown.classList.toggle('show');
     }
 
-    // Toggle nav menu on small screens
     function toggleNavMenu() {
         const menu = document.getElementById('nav-menu');
         menu.classList.toggle('show');
     }
 
-    // Language toggle placeholder function (implement your language switch logic)
     function toggleLanguage() {
         const flag = document.getElementById('lang-flag');
         const label = document.getElementById('lang-label');
@@ -242,7 +274,18 @@
         }
     }
 
-    // Optional: close dropdowns if clicking outside
+    function toggleDarkMode() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    });
+
     document.addEventListener('click', function (event) {
         const profileBtn = document.getElementById('profile-button');
         const dropdown = document.getElementById('profile-dropdown');
@@ -250,10 +293,9 @@
         const navMenu = document.getElementById('nav-menu');
 
         if (!profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.classList.add('hidden');
+            dropdown.classList.remove('show');
         }
 
-        // Optionally, close nav menu if click outside hamburger and nav menu
         if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
             navMenu.classList.remove('show');
         }

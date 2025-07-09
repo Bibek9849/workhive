@@ -2,6 +2,9 @@ from django.shortcuts import get_object_or_404, render,redirect
 # from accounts.account_forms import RegisterForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth import login, logout,authenticate
+from django.conf import settings
+from django.http import HttpResponse
+from django.utils.http import urlsafe_base64_decode
 
 from backend_crud.forms import ProfileUpdateForm
 from backend_crud.models import Category, Company, Job,JobApplication, Skill, UserSkill
@@ -11,8 +14,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Q
 from django.views.decorators.http import require_POST
-
-
+from django.core.mail import send_mail
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
 # ✅ Correct:
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -96,8 +103,34 @@ def aboutUS_view(request):
     return render(request, 'aboutus.html')
 
 def contact_view(request):
-    return render(request, 'contact_us.html')
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
 
+        full_message = f"Message from {first_name} {last_name} ({email}):\n\n{message}"
+
+        # Email to you
+        send_mail(
+            subject='New Contact Form Submission',
+            message=full_message,
+            from_email=email,
+            recipient_list=['pandeybibe098k@gmail.com'],
+        )
+
+        # Auto-reply to user
+        send_mail(
+            subject='Thanks for Contacting Us!',
+            message=f"Hi {first_name},\n\nThanks for reaching out! We’ve received your message and will get back to you shortly.\n\nBest,\nTeam",
+            from_email='pandeybibe098k@gmail.com',
+            recipient_list=[email],
+        )
+
+        messages.success(request, 'Thank you for contacting us! We’ve sent a confirmation to your email.')
+        return redirect('contact')
+
+    return render(request, 'contact_us.html')
 
 def details_view(request, job_id):
     job = get_object_or_404(Job, pk=job_id)
@@ -131,14 +164,66 @@ def job_view(request):
     jobs = jobs[:5]
 
     return render(request, 'jobs.html', {'jobs': jobs})
+
 def reset_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            # Generate token and uid
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(str(user.pk).encode())
+
+            # Reset URL
+            reset_url = request.build_absolute_uri(f'/reset/{uid}/{token}/')
+
+            # Render and send email
+            subject = 'Password Reset Request'
+            message = render_to_string('demo.html', {
+                'user': user,
+                'reset_url': reset_url
+            })
+
+            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email], fail_silently=False)
+
+            messages.success(request, "We've sent you an email with a password reset link.")
+        else:
+            messages.error(request, "No user found with that email address.")
+
+        return redirect('reset')  # Redirect to avoid form resubmission
+
     return render(request, 'reset.html')
-
-
 def change_view(request):
     return render(request, 'change.html')
+def demo_view(request):
+    return render(request, 'demo.html')
+def set_pass_view(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except Exception:
+        user = None
 
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            password1 = request.POST.get('password1')
+            password2 = request.POST.get('password2')
 
+            if password1 != password2:
+                messages.error(request, "Passwords do not match.")
+            elif len(password1) < 6:
+                messages.error(request, "Password must be at least 6 characters.")
+            else:
+                user.set_password(password1)
+                user.save()
+                messages.success(request, "Password reset successful! You can now log in.")
+                return redirect('login')
+
+        return render(request, 'set_password.html', {'validlink': True})
+    else:
+        messages.error(request, "The password reset link is invalid or expired.")
+        return render(request, 'set_password.html', {'validlink': False})
 
 @login_required
 def applied_view(request):
@@ -156,19 +241,19 @@ def profile_view(request):
         if form.is_valid():
             form.save()
 
-            # Save selected skills
             skills = form.cleaned_data['skills']
-            UserSkill.objects.filter(user=user).delete()
+            # Delete old skills
+            user.user_skill.all().delete()
+            # Add new skills
             for skill in skills:
                 UserSkill.objects.create(user=user, skill=skill)
 
             messages.success(request, "Profile updated successfully!")
-            return redirect('profile')  # Or wherever you want
+            return redirect('profile')
     else:
         form = ProfileUpdateForm(instance=user, user=user)
 
     return render(request, 'profile.html', {'form': form})
-
 
 @login_required
 def upload_profile_image(request):

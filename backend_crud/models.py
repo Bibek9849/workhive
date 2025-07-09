@@ -1,7 +1,12 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+class Skill(models.Model):
+    name = models.CharField(max_length=50, unique=True)  
 
+    def __str__(self):
+        return self.name
+    
 class User(AbstractUser):
     username = models.CharField(max_length = 50, blank = True, null = True, unique = True)
     email = models.EmailField(('email address'), unique = True)
@@ -11,6 +16,7 @@ class User(AbstractUser):
     education = models.CharField(max_length = 10)
     dob = models.CharField(max_length = 10)
     image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  # ✅ Add this line
+    skills = models.ManyToManyField(Skill, blank=True)  # ✅ Add this line
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -18,12 +24,7 @@ class User(AbstractUser):
     def __str__(self):
         return "{}".format(self.email)
 
-class Skill(models.Model):
-    name = models.CharField(max_length=50, unique=True)  
 
-    def __str__(self):
-        return self.name
-    
 class UserSkill(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='user_skill')
     skill = models.ForeignKey('Skill', on_delete=models.CASCADE, related_name='skill_user')
