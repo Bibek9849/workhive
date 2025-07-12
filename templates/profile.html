@@ -106,94 +106,100 @@
                         <p class="text-gray-600 mt-2">Update your personal information</p>
                     </div>
 
-                    <form class="space-y-8">
+                    <form method="post" enctype="multipart/form-data" class="space-y-8">
+                        {% csrf_token %}
+                    
                         <!-- Personal Information -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Full Name</label>
-                                <input type="text" placeholder="Enter full name" value="{{ user.first_name }}"
+                                <label class="text-sm font-medium text-gray-700">First Name</label>
+                                <input type="text" name="first_name" value="{{ user.first_name }}"
                                     class="w-full px-4 py-3 border rounded-lg" />
                             </div>
-
                             <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Email Address</label>
-                                <input type="email" name="email" value="{{ user.email }}" readonly
-                                    class="w-full px-4 py-2 border rounded-lg mt-1 bg-gray-100 cursor-not-allowed"
-                                    required />
-
+                                <label class="text-sm font-medium text-gray-700">Last Name</label>
+                                <input type="text" name="last_name" value="{{ user.last_name }}"
+                                    class="w-full px-4 py-3 border rounded-lg" />
                             </div>
-
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Date of Birth</label>
-                                <input type="date" value="{{ user.dob }}" class="w-full px-4 py-3 border rounded-lg" />
+                                <input type="date" name="dob" value="{{ user.dob }}"
+                                    class="w-full px-4 py-3 border rounded-lg" />
                             </div>
-
                         </div>
-
+                    
                         <!-- Professional Info -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Experience</label>
-                                <select class="w-full px-4 py-3 border rounded-lg">
-                                    <option>Fresher</option>
-                                    <option selected>1-3 years</option>
-                                    <option>3-5 years</option>
-                                    <option>5+ years</option>
+                                <select name="experience" class="w-full px-4 py-3 border rounded-lg">
+                                    <option {% if user.experience == "Fresher" %}selected{% endif %}>Fresher</option>
+                                    <option {% if user.experience == "1-3 years" %}selected{% endif %}>1-3 years</option>
+                                    <option {% if user.experience == "3-5 years" %}selected{% endif %}>3-5 years</option>
+                                    <option {% if user.experience == "5+ years" %}selected{% endif %}>5+ years</option>
                                 </select>
                             </div>
-
+                    
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Gender</label>
-                                <select class="w-full px-4 py-3 border rounded-lg">
-                                    <option selected>Male</option>
-                                    <option>Female</option>
-                                    <option>Other</option>
+                                <select name="gender" class="w-full px-4 py-3 border rounded-lg">
+                                    <option {% if user.gender == "Male" %}selected{% endif %}>Male</option>
+                                    <option {% if user.gender == "Female" %}selected{% endif %}>Female</option>
+                                    <option {% if user.gender == "Other" %}selected{% endif %}>Other</option>
                                 </select>
                             </div>
-
+                    
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Education</label>
-                                <select class="w-full px-4 py-3 border rounded-lg">
-                                    <option>SEE</option>
-                                    <option>+2</option>
-                                    <option selected>Bachelor's</option>
-                                    <option>Master's</option>
+                                <select name="education" class="w-full px-4 py-3 border rounded-lg">
+                                    <option {% if user.education == "SEE" %}selected{% endif %}>SEE</option>
+                                    <option {% if user.education == "+2" %}selected{% endif %}>+2</option>
+                                    <option {% if user.education == "Bachelor's" %}selected{% endif %}>Bachelor's</option>
+                                    <option {% if user.education == "Master's" %}selected{% endif %}>Master's</option>
                                 </select>
                             </div>
                         </div>
-
+                    
                         <!-- Contact Info -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Phone</label>
-                                <input type="tel" placeholder="+977 98XXXXXXXX" value="{{ user.phone_no }}"
+                                <input type="tel" name="phone_no" placeholder="+977 98XXXXXXXX" value="{{ user.phone_no }}"
                                     class="w-full px-4 py-3 border rounded-lg" />
                             </div>
                         </div>
-
+                    
                         <!-- Skills -->
                         <div>
                             <label class="text-sm font-medium text-gray-700 block mb-3">Skills</label>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <label class="flex items-center space-x-2">
-                                    <input type="checkbox" checked class="form-checkbox text-blue-600" />
+                                    <input type="checkbox" name="skills" value="Python"
+                                           {% if "Python" in skill_names %}checked{% endif %}
+                                           class="form-checkbox text-blue-600" />
                                     <span class="text-sm">Python</span>
                                 </label>
                                 <label class="flex items-center space-x-2">
-                                    <input type="checkbox" checked class="form-checkbox text-blue-600" />
+                                    <input type="checkbox" name="skills" value="Java"
+                                           {% if "Java" in skill_names %}checked{% endif %}
+                                           class="form-checkbox text-blue-600" />
                                     <span class="text-sm">Java</span>
                                 </label>
                                 <label class="flex items-center space-x-2">
-                                    <input type="checkbox" class="form-checkbox text-blue-600" />
+                                    <input type="checkbox" name="skills" value="Flutter"
+                                           {% if "Flutter" in skill_names %}checked{% endif %}
+                                           class="form-checkbox text-blue-600" />
                                     <span class="text-sm">Flutter</span>
                                 </label>
                                 <label class="flex items-center space-x-2">
-                                    <input type="checkbox" class="form-checkbox text-blue-600" />
+                                    <input type="checkbox" name="skills" value="JavaScript"
+                                           {% if "JavaScript" in skill_names %}checked{% endif %}
+                                           class="form-checkbox text-blue-600" />
                                     <span class="text-sm">JavaScript</span>
                                 </label>
                             </div>
                         </div>
-
+                    
                         <!-- Buttons -->
                         <div class="flex justify-end gap-4">
                             <button type="submit"
@@ -206,11 +212,13 @@
                             </button>
                         </div>
                     </form>
+                    
                 </div>
             </main>
         </div>
     </div>
-
+    
+      
     <!-- JavaScript: Image Upload Preview -->
     <script>
         function previewProfileImage(event) {
@@ -238,59 +246,63 @@
                 dropdown.classList.remove('show');
             }
         });
-        function uploadProfileImage(event) {
-            const input = event.target;
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
+        
+  const uploadImageUrl = "{% url 'upload_profile_image' %}";
 
-                // Show preview immediately
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('profile-preview').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let cookie of cookies) {
+              cookie = cookie.trim();
+              if (cookie.startsWith(name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
 
-                // Prepare form data to send to backend
-                const formData = new FormData();
-                formData.append('image', file);
+  function uploadProfileImage(event) {
+      const input = event.target;
+      if (input.files && input.files[0]) {
+          const file = input.files[0];
 
-                fetch('/profile/upload-image/', {  // You'll create this URL endpoint
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken')  // get CSRF token function below
-                    },
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload();
-                        } else {
-                            alert('Error uploading image');
-                        }
-                    })
-                    .catch(error => {
-                        alert('Error uploading image');
-                        console.error(error);
-                    });
-            }
-        }
+          // Show preview immediately
+          const reader = new FileReader();
+          reader.onload = function (e) {
+              document.getElementById('profile-preview').src = e.target.result;
+          };
+          reader.readAsDataURL(file);
 
-        // Utility to get CSRF cookie (needed for POST requests)
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let cookie of cookies) {
-                    cookie = cookie.trim();
-                    if (cookie.startsWith(name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
+          // Prepare form data to send to backend
+          const formData = new FormData();
+          formData.append('image', file);
+
+          fetch(uploadImageUrl, {
+              method: 'POST',
+              headers: {
+                  'X-CSRFToken': getCookie('csrftoken')
+              },
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              console.log(data);
+              if (data.success) {
+                  location.reload();
+              } else {
+                  alert('Error uploading image: ' + (data.error || 'Unknown error'));
+              }
+          })
+          .catch(error => {
+              alert('Error uploading image');
+              console.error(error);
+          });
+      }
+  }
+</script>
 
     </script>
 </body>

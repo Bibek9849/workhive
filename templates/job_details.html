@@ -904,24 +904,21 @@
         </div>
     </div>
 
-    <!-- Enhanced Apply Modal -->
-    <div id="applyModal" class="modal-overlay">
+     <!-- Apply Modal -->
+     <div id="applyModal" class="modal-overlay">
         <div class="modal-container">
             <div class="modal-header">
-                <button onclick="closeModal()" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button onclick="closeModal()" class="close-btn"><i class="fas fa-times"></i></button>
                 <h2><i class="fas fa-briefcase mr-2"></i>Apply for Position</h2>
                 <p>{{ job.title }} at {{ job.company.name }}</p>
-
             </div>
 
             <div class="modal-body">
                 <div class="user-info">
                     {% if user.image %}
-                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
+                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img" />
                     {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
+                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img" />
                     {% endif %}
                     <div class="user-details">
                         <h3>{{ user.get_full_name }}</h3>
@@ -929,40 +926,30 @@
                     </div>
                 </div>
 
-
                 <form id="applicationForm" onsubmit="submitApplication(event)">
+                    {% csrf_token %}
                     <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-envelope mr-2"></i>Email Address
-                        </label>
-                        <input type="email" class="form-input" value="{{ user.email }}" name="email"
-                            placeholder="your.email@example.com" readonly required>
+                        <label class="form-label"><i class="fas fa-envelope mr-2"></i>Email Address</label>
+                        <input type="email" class="form-input" value="{{ user.email }}" name="email" readonly required />
                     </div>
 
-
                     <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-phone mr-2"></i>Contact Number
-                        </label>
+                        <label class="form-label"><i class="fas fa-phone mr-2"></i>Contact Number</label>
                         <input type="tel" class="form-input" value="{{ user.phone_no }}" name="phone"
                             placeholder="+977 98XXXXXXXX" required inputmode="numeric" pattern="[0-9]*"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
                     </div>
 
-
                     <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-file-alt mr-2"></i>Upload Resume/CV
-                        </label>
+                        <label class="form-label"><i class="fas fa-file-alt mr-2"></i>Upload Resume/CV</label>
                         <div class="file-input-wrapper">
-                            <input type="file" id="resume" class="file-input" required>
+                            <input type="file" id="resume" class="file-input" required />
                             <label for="resume" class="file-input-label">
                                 <i class="fas fa-upload"></i> Choose File
                             </label>
                             <p class="file-info" id="file-name">No file chosen</p>
                         </div>
                     </div>
-
 
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-paper-plane mr-2"></i>Submit Application
@@ -973,7 +960,7 @@
     </div>
 
     <script>
-        const isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}";  // ✅ use single quotes inside yesno
+        const isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}";
         const isAuthenticatedBool = isAuthenticated === "true";
 
         const loginUrl = "{% url 'login' %}?next={{ request.path|urlencode }}";
@@ -1012,7 +999,7 @@
             formData.append('resume', resume);
             formData.append('phone', phone);
 
-            fetch(`/apply/{{ job.id }}/`, {
+            fetch("{% url 'apply_job' job.id %}", {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}'
@@ -1033,7 +1020,6 @@
                     console.error(err);
                 });
         }
-
 
 
 

@@ -1,3 +1,5 @@
+{% load i18n i18n_helpers %} <!-- Add i18n_helpers -->
+
 {% load static %}
 
 <style>
@@ -203,10 +205,10 @@
 
     <nav>
         <ul id="nav-menu">
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'job' %}">Jobs</a></li>
-            <li><a href="{% url 'about' %}">About Us</a></li>
-            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+            <li><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+            <li><a href="{% url 'job' %}">{% trans "Jobs" %}</a></li>
+            <li><a href="{% url 'about' %}">{% trans "About Us" %}</a></li>
+            <li><a href="{% url 'contact' %}">{% trans "Contact Us" %}</a></li>
         </ul>
     </nav>
 
@@ -215,11 +217,31 @@
             <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language" />
             <span id="lang-label">English</span>
         </div>
+        
 
         <div class="dark-toggle" onclick="toggleDarkMode()">
             <i class="fas fa-moon"></i>
         </div> -->
+        <!-- <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+            <a href="{% url 'signup' %}">Dont have Account Create</a>
+        </form> -->
 
+        <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path|escape }}" />
+            <select name="language" onchange="this.form.submit()">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% for code, name in LANGUAGES %}
+                <option value="{{ code }}" {% if code == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ name }}
+                </option>
+                {% endfor %}
+            </select>
+        </form>
         {% if user.is_authenticated %}
         <div class="user-menu">
             <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
@@ -233,14 +255,14 @@
             </button>
 
             <div id="profile-dropdown" class="profile-dropdown">
-                <a href="{% url 'profile' %}">Profile</a>
-                <a href="{% url 'change' %}">Settings</a>
-                <a href="{% url 'logout' %}">Logout</a>
+                <a href="{% url 'profile' %}">{% trans "Profile" %}</a>
+                <a href="{% url 'change' %}">{% trans "Settings" %}</a>
+                <a href="{% url 'logout' %}">{% trans "Logout" %}</a>
             </div>
         </div>
         {% else %}
-        <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-        <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+        <a href="{% url 'login' %}" class="btn btn-outline">{% trans "Login" %}</a>
+        <a href="{% url 'signup' %}" class="btn btn-primary">{% trans "Register" %}</a>
         {% endif %}
 
         <div class="hamburger" id="hamburger" onclick="toggleNavMenu()">

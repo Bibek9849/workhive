@@ -285,22 +285,61 @@ def applied_view(request):
         'job__job_type'
     )
     return render(request, 'applied.html', {'applications': applications})
+# @login_required
+# def profile_view(request):
+#     user = request.user
+#     print(request.method)
+#     if request.method == 'POST':
+#         form = ProfileUpdateForm(request.POST, request.FILES, instance=user)  # include request.FILES if image upload
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "Profile updated successfully!")
+#             return redirect('profile')
+#         else:
+#             # form invalid, you can debug here
+#             print(form.errors)
+#     else:
+#         form = ProfileUpdateForm(instance=user)
+#         skill_names = list(user.skills.values_list('name', flat=True))  # ['Python', 'Java', ...]
+
+
+#     return render(request, 'profile.html', {'form': form, 'user': user})
+
 @login_required
 def profile_view(request):
     user = request.user
+
     if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, request.FILES, instance=user)  # include request.FILES if image upload
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
+
+            # Get list of skill names from POST (empty list if none selected)
+            selected_skills = request.POST.getlist('skills')
+
+            # Update user's skills (overwrite)
+            skills_qs = Skill.objects.filter(name__in=selected_skills)
+            user.skills.set(skills_qs)
+
+            dob = request.POST.get("dob")
+            print(dob)
+
+            user.dob = dob
+            user.save()
+
             messages.success(request, "Profile updated successfully!")
             return redirect('profile')
         else:
-            # form invalid, you can debug here
             print(form.errors)
     else:
         form = ProfileUpdateForm(instance=user)
-
-    return render(request, 'profile.html', {'form': form, 'user': user})
+    skill_names = list(user.skills.values_list('name', flat=True))
+    print(skill_names)
+    return render(request, 'profile.html', {
+        'form': form,
+        'user': user,
+        'skill_names': skill_names,
+    })
 
 @login_required
 def upload_profile_image(request):

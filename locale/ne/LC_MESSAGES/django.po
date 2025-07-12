@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WorkHive 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 02:30+0000\n"
+"POT-Creation-Date: 2025-07-12 20:33+0545\n"
 "PO-Revision-Date: 2025-07-08 14:00+0545\n"
 "Last-Translator: Bibek Pandey <youremail@example.com>\n"
 "Language-Team: Nepali <np@li.org>\n"
@@ -18,72 +18,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/home.html
+#: templates/navbar.html:208
 msgid "Home"
 msgstr "गृहपृष्ठ"
 
+#: templates/navbar.html:209
 msgid "Jobs"
 msgstr "रोजगार"
 
+#: templates/navbar.html:210
 msgid "About Us"
-msgstr "हाम्रो बारेमा"
+msgstr "हाम्रोबारे"
 
+#: templates/navbar.html:211
 msgid "Contact Us"
-msgstr "सम्पर्क गर्नुहोस्"
+msgstr "सम्पर्क"
+
+#: templates/navbar.html:258
+msgid "Profile"
+msgstr "प्रोफाइल"
+
+#: templates/navbar.html:259
+msgid "Settings"
+msgstr "सेटिङ्स"
+
+#: templates/navbar.html:260
+msgid "Logout"
+msgstr "लगआउट"
 
 msgid "Login"
 msgstr "लगइन"
 
+#: templates/navbar.html:213
 msgid "Register"
 msgstr "दर्ता गर्नुहोस्"
-
-msgid "Find your new job or intern today"
-msgstr "आफ्नो नयाँ जागिर वा इन्टर्न खोज्नुहोस्"
-
-msgid "Job Title or Company"
-msgstr "काम शीर्षक वा कम्पनी"
-
-msgid "Select Location"
-msgstr "स्थान छान्नुहोस्"
-
-msgid "Select Category"
-msgstr "श्रेणी छान्नुहोस्"
-
-msgid "Search"
-msgstr "खोज्नुहोस्"
-
-msgid "Jobs Available"
-msgstr "उपलब्ध रोजगार"
-
-msgid "Candidates"
-msgstr "उम्मेदवार"
-
-msgid "Companies"
-msgstr "कम्पनीहरू"
-
-msgid "Recent Jobs Available"
-msgstr "हालसालै उपलब्ध रोजगार"
-
-msgid "View all"
-msgstr "सबै हेर्नुहोस्"
-
-msgid "Job Details"
-msgstr "रोजगार विवरण"
-
-msgid "Profile"
-msgstr "प्रोफाइल"
-
-msgid "Settings"
-msgstr "सेटिङ"
-
-msgid "Logout"
-msgstr "लगआउट"
-
-msgid "Logged in successfully!"
-msgstr "सफलतापूर्वक लगइन भयो!"
-
-msgid "Gongabu, Kathmandu"
-msgstr "गोंगबु, काठमाडौं"
-
-msgid "Copyright © 2025 • WorkHive"
-msgstr "प्रतिलिपि अधिकार © २०२५ • वर्कहाइव"

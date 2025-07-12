@@ -332,7 +332,7 @@
             </div>
             {% endif %}
 
-            <form method="POST" action="{% url 'register' %}" id="signup-form">
+            <form method="POST" action="{% url 'signup' %}" id="signup-form">
                 {% csrf_token %}
 
                 <label for="fullname">Full Name</label>
