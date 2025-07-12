@@ -1,20 +1,22 @@
-{% load static %}
+{% load static i18n %}
 
 <!DOCTYPE html>
 
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Listings</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% trans "Job Listings" %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <style>
-        .filter-section {
-            background-color: #EBF5F4;
-        }
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    <style>
+        /* Your existing CSS styles */
+        .filter-section {
+            background-color: #ebf5f4;
+        }
 
         .filter-group {
             margin-bottom: 1.5rem;
@@ -144,7 +146,7 @@
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold text-center mb-8">Jobs</h1>
+        <h1 class="text-2xl font-bold text-center mb-8">{% trans "Jobs" %}</h1>
 
         <div class="flex flex-col lg:flex-row gap-4">
             <!-- Sidebar -->
@@ -152,10 +154,10 @@
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="section-title">
                         <i class="fas fa-filter text-blue-600"></i>
-                        Search Filters
+                        {% trans "Search Filters" %}
                     </h2>
                     <button class="clear-filters" onclick="clearAllFilters()">
-                        <i class="fas fa-times"></i> Clear
+                        <i class="fas fa-times"></i> {% trans "Clear" %}
                     </button>
                 </div>
 
@@ -163,24 +165,24 @@
                 <div class="filter-group">
                     <h3 class="section-title">
                         <i class="fas fa-search text-blue-600"></i>
-                        Job Title
+                        {% trans "Job Title" %}
                     </h3>
-                    <input type="text" placeholder="Search job title or company..." class="filter-input" id="jobSearch">
+                    <input type="text" placeholder="{% trans "Search job title or company..." %}" class="filter-input" id="jobSearch" />
                 </div>
 
                 <!-- Location -->
                 <div class="filter-group">
                     <h3 class="section-title">
                         <i class="fas fa-map-marker-alt text-blue-600"></i>
-                        Location
+                        {% trans "Location" %}
                     </h3>
                     <select class="filter-input" id="locationSelect">
-                        <option value="">Choose city</option>
-                        <option value="kathmandu">Kathmandu</option>
-                        <option value="lalitpur">Lalitpur</option>
-                        <option value="bhaktapur">Bhaktapur</option>
-                        <option value="pokhara">Pokhara</option>
-                        <option value="chitwan">Chitwan</option>
+                        <option value="">{% trans "Choose city" %}</option>
+                        <option value="kathmandu">{% trans "Kathmandu" %}</option>
+                        <option value="lalitpur">{% trans "Lalitpur" %}</option>
+                        <option value="bhaktapur">{% trans "Bhaktapur" %}</option>
+                        <option value="pokhara">{% trans "Pokhara" %}</option>
+                        <option value="chitwan">{% trans "Chitwan" %}</option>
                     </select>
                 </div>
 
@@ -188,26 +190,26 @@
                 <div class="filter-group">
                     <h3 class="section-title">
                         <i class="fas fa-layer-group text-blue-600"></i>
-                        Category
+                        {% trans "Category" %}
                     </h3>
                     <div class="space-y-1">
                         <label class="checkbox-item">
-                            <input type="checkbox" value="creative"> Creative & Design
+                            <input type="checkbox" value="creative" /> {% trans "Creative & Design" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="business"> Business & Finance
+                            <input type="checkbox" value="business" /> {% trans "Business & Finance" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="construction"> Construction
+                            <input type="checkbox" value="construction" /> {% trans "Construction" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="commerce"> E-Commerce
+                            <input type="checkbox" value="commerce" /> {% trans "E-Commerce" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="tourism"> Hotels & Tourism
+                            <input type="checkbox" value="tourism" /> {% trans "Hotels & Tourism" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="it"> Information Technology
+                            <input type="checkbox" value="it" /> {% trans "Information Technology" %}
                         </label>
                     </div>
                 </div>
@@ -216,20 +218,20 @@
                 <div class="filter-group">
                     <h3 class="section-title">
                         <i class="fas fa-briefcase text-blue-600"></i>
-                        Job Type
+                        {% trans "Job Type" %}
                     </h3>
                     <div class="space-y-1">
                         <label class="checkbox-item">
-                            <input type="checkbox" value="fulltime"> Full Time
+                            <input type="checkbox" value="fulltime" /> {% trans "Full Time" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="parttime"> Part Time
+                            <input type="checkbox" value="parttime" /> {% trans "Part Time" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="internship"> Internship
+                            <input type="checkbox" value="internship" /> {% trans "Internship" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="freelance"> Freelance
+                            <input type="checkbox" value="freelance" /> {% trans "Freelance" %}
                         </label>
                     </div>
                 </div>
@@ -238,20 +240,20 @@
                 <div class="filter-group">
                     <h3 class="section-title">
                         <i class="fas fa-chart-line text-blue-600"></i>
-                        Experience Level
+                        {% trans "Experience Level" %}
                     </h3>
                     <div class="space-y-1">
                         <label class="checkbox-item">
-                            <input type="checkbox" value="entry"> Entry Level (0-1 years)
+                            <input type="checkbox" value="entry" /> {% trans "Entry Level (0-1 years)" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="junior"> Junior (1-3 years)
+                            <input type="checkbox" value="junior" /> {% trans "Junior (1-3 years)" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="mid"> Mid Level (3-6 years)
+                            <input type="checkbox" value="mid" /> {% trans "Mid Level (3-6 years)" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="senior"> Senior (6+ years)
+                            <input type="checkbox" value="senior" /> {% trans "Senior (6+ years)" %}
                         </label>
                     </div>
                 </div>
@@ -260,20 +262,20 @@
                 <div class="filter-group">
                     <h3 class="section-title">
                         <i class="fas fa-calendar-alt text-blue-600"></i>
-                        Date Posted
+                        {% trans "Date Posted" %}
                     </h3>
                     <div class="space-y-1">
                         <label class="checkbox-item">
-                            <input type="checkbox" value="24h"> Last 24 hours
+                            <input type="checkbox" value="24h" /> {% trans "Last 24 hours" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="7d"> Last 7 days
+                            <input type="checkbox" value="7d" /> {% trans "Last 7 days" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="30d"> Last 30 days
+                            <input type="checkbox" value="30d" /> {% trans "Last 30 days" %}
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="any"> Any time
+                            <input type="checkbox" value="any" /> {% trans "Any time" %}
                         </label>
                     </div>
                 </div>
@@ -282,55 +284,76 @@
                 <div class="filter-group">
                     <h3 class="section-title">
                         <i class="fas fa-money-bill-wave text-blue-600"></i>
-                        Salary Range
+                        {% trans "Salary Range" %}
                     </h3>
                     <div class="flex gap-2 mb-2">
-                        <input type="number" placeholder="Min (Rs)" class="filter-input" id="minSalary">
-                        <input type="number" placeholder="Max (Rs)" class="filter-input" id="maxSalary">
+                        <input
+                            type="number"
+                            placeholder="{% trans 'Min (Rs)' %}"
+                            class="filter-input"
+                            id="minSalary"
+                        />
+                        <input
+                            type="number"
+                            placeholder="{% trans 'Max (Rs)' %}"
+                            class="filter-input"
+                            id="maxSalary"
+                        />
                     </div>
                     <div class="text-sm text-gray-600 mb-3">
-                        <span>Popular ranges:</span>
+                        <span>{% trans "Popular ranges:" %}</span>
                         <div class="flex flex-wrap gap-1 mt-1">
-                            <button class="text-xs bg-white px-2 py-1 rounded border"
-                                onclick="setSalaryRange(15000, 30000)">15k-30k</button>
-                            <button class="text-xs bg-white px-2 py-1 rounded border"
-                                onclick="setSalaryRange(30000, 60000)">30k-60k</button>
-                            <button class="text-xs bg-white px-2 py-1 rounded border"
-                                onclick="setSalaryRange(60000, 100000)">60k-100k</button>
+                            <button
+                                class="text-xs bg-white px-2 py-1 rounded border"
+                                onclick="setSalaryRange(15000, 30000)"
+                            >
+                                15k-30k
+                            </button>
+                            <button
+                                class="text-xs bg-white px-2 py-1 rounded border"
+                                onclick="setSalaryRange(30000, 60000)"
+                            >
+                                30k-60k
+                            </button>
+                            <button
+                                class="text-xs bg-white px-2 py-1 rounded border"
+                                onclick="setSalaryRange(60000, 100000)"
+                            >
+                                60k-100k
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <button class="apply-btn" onclick="applyFilters()">
-                    <i class="fas fa-search mr-2"></i>
-                    Apply Filters
+                    <i class="fas fa-search mr-2"></i> {% trans "Apply Filters" %}
                 </button>
 
-                <!-- Popular Tags -->
+                <!-- Popular Tags (commented out) -->
                 <!-- <div class="filter-group">
                     <h3 class="section-title">
                         <i class="fas fa-tags text-blue-600"></i>
-                        Popular Tags
+                        {% trans "Popular Tags" %}
                     </h3>
                     <div class="flex flex-wrap gap-2">
-                        <span class="tag" onclick="searchByTag('creative')">creative</span>
-                        <span class="tag" onclick="searchByTag('management')">management</span>
-                        <span class="tag" onclick="searchByTag('staff')">staff</span>
-                        <span class="tag" onclick="searchByTag('remote')">remote</span>
-                        <span class="tag" onclick="searchByTag('urgent')">urgent</span>
+                        <span class="tag" onclick="searchByTag('creative')">{% trans "creative" %}</span>
+                        <span class="tag" onclick="searchByTag('management')">{% trans "management" %}</span>
+                        <span class="tag" onclick="searchByTag('staff')">{% trans "staff" %}</span>
+                        <span class="tag" onclick="searchByTag('remote')">{% trans "remote" %}</span>
+                        <span class="tag" onclick="searchByTag('urgent')">{% trans "urgent" %}</span>
                     </div>
                 </div> -->
 
                 <!-- Hiring Banner -->
                 <div class="hiring-banner">
                     <div class="text-2xl font-bold mb-2">
-                        <i class="fas fa-bullhorn mr-2"></i>
-                        WE ARE HIRING
+                        <i class="fas fa-bullhorn mr-2"></i> {% trans "WE ARE HIRING" %}
                     </div>
-                    <p class="mb-3">Join our team today!</p>
+                    <p class="mb-3">{% trans "Join our team today!" %}</p>
                     <button
-                        class="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                        Apply Now
+                        class="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                    >
+                        {% trans "Apply Now" %}
                     </button>
                 </div>
             </aside>
@@ -338,23 +361,24 @@
             <!-- Main Content Area -->
             <main class="w-full lg:w-3/4">
                 <div class="flex justify-between items-center mb-4">
-                    <p>Showing 6 of 10 results</p>
                     <select class="border rounded p-2">
-                        <option>Sort by latest</option>
+                        <option>{% trans "Sort by latest" %}</option>
                     </select>
                 </div>
 
                 <!-- Job Cards -->
                 <div class="space-y-4">
-                    <!-- Example Job Card -->
                     {% for job in jobs %}
                     <div class="job-card">
-                        <div class="posted">{{ job.posted_at|timesince }} ago</div>
+                        <div class="posted">{{ job.posted_at|timesince }} {% trans "ago" %} </div>
                         <div class="job-info-left">
                             {% if job.company.logo %}
-                            <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo">
+                            <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo" />
                             {% else %}
-                            <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Default Logo">
+                            <img
+                                src="https://cdn-icons-png.flaticon.com/512/732/732200.png"
+                                alt="{% trans "Default Logo" %}"
+                            />
                             {% endif %}
 
                             <div class="job-details">
@@ -371,90 +395,82 @@
                                         Rs {{ job.salary_min }}+
                                         {% endif %}
                                     </span>
-
+    
                                     <span><i class="fas fa-map-marker-alt"></i> {{ job.company.address }}</span>
                                 </div>
                             </div>
                         </div>
-                        <a href="{% url 'details' job.id %}" class="btn btn-primary">Job Details</a>
+                        <a href="{% url 'details' job.id %}" class="btn btn-primary">{% trans "Job Details" %}</a>
                     </div>
                     {% empty %}
-                    <p>No recent jobs found.</p>
+                    <p>{% trans "No recent jobs found." %}</p>
                     {% endfor %}
-
-                    <!-- Additional job listings can be added following the same pattern -->
                 </div>
             </main>
         </div>
     </div>
 
-
-
     <script>
+        // Your existing JS code (unchanged)
         function toggleLanguage() {
-            const flag = document.getElementById('lang-flag');
-            const label = document.getElementById('lang-label');
-            const title = document.getElementById('hero-title');
+            const flag = document.getElementById("lang-flag");
+            const label = document.getElementById("lang-label");
+            const title = document.getElementById("hero-title");
 
-            if (label.textContent === 'English') {
+            if (label.textContent === "English") {
                 // Switch to Nepali
-                flag.src = 'https://flagcdn.com/16x12/np.png';
-                label.textContent = 'नेपाली';
+                flag.src = "https://flagcdn.com/16x12/np.png";
+                label.textContent = "नेपाली";
             } else {
                 // Switch to English
-                flag.src = 'https://flagcdn.com/16x12/gb.png';
-                label.textContent = 'English';
+                flag.src = "https://flagcdn.com/16x12/gb.png";
+                label.textContent = "English";
             }
         }
         function clearAllFilters() {
-            // Clear all checkboxes
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll("input[type='checkbox']").forEach((cb) => (cb.checked = false));
 
-            // Clear text inputs
-            document.getElementById('jobSearch').value = '';
-            document.getElementById('minSalary').value = '';
-            document.getElementById('maxSalary').value = '';
+            document.getElementById("jobSearch").value = "";
+            document.getElementById("minSalary").value = "";
+            document.getElementById("maxSalary").value = "";
 
-            // Reset select
-            document.getElementById('locationSelect').value = '';
+            document.getElementById("locationSelect").value = "";
 
-            console.log('All filters cleared');
+            console.log("All filters cleared");
         }
 
         function setSalaryRange(min, max) {
-            document.getElementById('minSalary').value = min;
-            document.getElementById('maxSalary').value = max;
+            document.getElementById("minSalary").value = min;
+            document.getElementById("maxSalary").value = max;
         }
 
         function searchByTag(tag) {
-            document.getElementById('jobSearch').value = tag;
+            document.getElementById("jobSearch").value = tag;
             applyFilters();
         }
 
         function applyFilters() {
-            // Collect all filter values
             const filters = {
-                jobTitle: document.getElementById('jobSearch').value,
-                location: document.getElementById('locationSelect').value,
-                categories: Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value),
-                minSalary: document.getElementById('minSalary').value,
-                maxSalary: document.getElementById('maxSalary').value
+                jobTitle: document.getElementById("jobSearch").value,
+                location: document.getElementById("locationSelect").value,
+                categories: Array.from(
+                    document.querySelectorAll("input[type='checkbox']:checked")
+                ).map((cb) => cb.value),
+                minSalary: document.getElementById("minSalary").value,
+                maxSalary: document.getElementById("maxSalary").value,
             };
 
-            console.log('Applying filters:', filters);
+            console.log("Applying filters:", filters);
 
-            // Add visual feedback
-            const btn = document.querySelector('.apply-btn');
+            const btn = document.querySelector(".apply-btn");
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Searching...';
             btn.disabled = true;
 
-            // Simulate API call
             setTimeout(() => {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
 
-                // Show success feedback
                 btn.innerHTML = '<i class="fas fa-check mr-2"></i>Filters Applied';
                 setTimeout(() => {
                     btn.innerHTML = originalText;
@@ -462,48 +478,45 @@
             }, 1000);
         }
 
-        // Add real-time search functionality
-        document.getElementById('jobSearch').addEventListener('input', function (e) {
+        document.getElementById("jobSearch").addEventListener("input", function (e) {
             if (e.target.value.length > 2) {
-                // Debounced search implementation would go here
-                console.log('Searching for:', e.target.value);
+                console.log("Searching for:", e.target.value);
             }
         });
 
-        // Add filter count badge
         function updateFilterCount() {
-            const checkedFilters = document.querySelectorAll('input[type="checkbox"]:checked').length;
-            const hasTextFilters = document.getElementById('jobSearch').value ||
-                document.getElementById('minSalary').value ||
-                document.getElementById('maxSalary').value ||
-                document.getElementById('locationSelect').value;
+            const checkedFilters = document.querySelectorAll(
+                "input[type='checkbox']:checked"
+            ).length;
+            const hasTextFilters =
+                document.getElementById("jobSearch").value ||
+                document.getElementById("minSalary").value ||
+                document.getElementById("maxSalary").value ||
+                document.getElementById("locationSelect").value;
 
             const totalFilters = checkedFilters + (hasTextFilters ? 1 : 0);
 
-            // Update filter badge (you can add this to the UI)
-            console.log('Active filters:', totalFilters);
+            console.log("Active filters:", totalFilters);
         }
 
-        // Listen for filter changes
-        document.addEventListener('change', updateFilterCount);
-        document.addEventListener('input', updateFilterCount);
+        document.addEventListener("change", updateFilterCount);
+        document.addEventListener("input", updateFilterCount);
         function toggleProfileDropdown() {
-            const dropdown = document.getElementById('profile-dropdown');
-            dropdown.classList.toggle('show');
+            const dropdown = document.getElementById("profile-dropdown");
+            dropdown.classList.toggle("show");
         }
 
-        // Close dropdown when clicking outside
-        window.addEventListener('click', function (e) {
-            const dropdown = document.getElementById('profile-dropdown');
-            const button = document.getElementById('profile-button');
+        window.addEventListener("click", function (e) {
+            const dropdown = document.getElementById("profile-dropdown");
+            const button = document.getElementById("profile-button");
 
             if (!button.contains(e.target)) {
-                dropdown.classList.remove('show');
+                dropdown.classList.remove("show");
             }
         });
     </script>
-    {% include 'footer.html' %}
 
+    {% include "footer.html" %}
 </body>
 
 </html>

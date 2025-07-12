@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -755,14 +756,16 @@
 
 
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold text-center mb-8">Jobs Details</h1>
+        <h1 class="text-2xl font-bold text-center mb-8">{% trans "Job Details" %}</h1>
 
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Left Content -->
             <div class="w-full lg:w-2/3 space-y-6">
 
                 <div class="job-card">
-                    <div class="posted">{{ job.posted_at|timesince }} ago</div>
+                    <!-- <div class="posted">{{ job.posted_at|timesince }} ago</div> -->
+                    <p class="posted">{{ job.posted_at|timesince }} {% trans "ago" %}</p>
+
                     <div class="job-info-left">
                         {% if job.company.logo %}
                         <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo">
@@ -789,16 +792,16 @@
                         </div>
                     </div>
                     <button onclick="openModal()" class="btn btn-primary">
-                        <i class="fas fa-paper-plane mr-2"></i>Apply Job
+                        <i class="fas fa-paper-plane mr-2"></i>{% trans "Apply Job" %}
                     </button>
                 </div>
 
                 <!-- Description Section -->
                 <div class="bg-white p-6 rounded shadow">
-                    <h3 class="text-lg font-semibold mb-2">Job Description</h3>
+                    <h2 class="text-xl font-semibold mb-2">{% trans "Job Description" %}</h2>
                     <p class="mb-4">{{ job.description }}</p>
 
-                    <h3 class="text-lg font-semibold mb-2">Key Responsibilities</h3>
+                    <h2 class="text-xl font-semibold mb-2">{% trans "Key Responsibilities" %}</h2>
                     <ul class="list-disc list-inside text-gray-700 space-y-1">
                         {% for item in job.responsibilities.splitlines %}
                         <!-- assuming responsibilities stored as lines -->
@@ -806,7 +809,7 @@
                         {% endfor %}
                     </ul>
 
-                    <h3 class="text-lg font-semibold mt-4 mb-2">Professional Skills</h3>
+                    <h3 class="text-lg font-semibold mt-4 mb-2">{% trans "Professional Skills" %}</h3>
                     <ul class="list-disc list-inside text-gray-700 space-y-1">
                         {% for skill in job.skills.splitlines %}
                         <li>{{ skill }}</li>
@@ -832,7 +835,7 @@
 
                 <!-- Related Jobs -->
                 <div class="bg-white p-6 rounded shadow">
-                    <h3 class="text-lg font-semibold mb-4">Related Jobs</h3>
+                    <h3 class="text-lg font-semibold mb-4">{% trans "Related Jobs" %}</h3>
                     <div class="job-cards-container">
                         {% for job in related_jobs %}
                         <div class="job-card">
@@ -868,12 +871,12 @@
                             </div>
 
                             <div class="job-card-footer">
-                                <span class="posted">{{ job.posted_at|timesince }} ago</span>
-                                <a href="{% url 'details' job.id %}" class="btn btn-primary">Job Details</a>
+                                <span class="posted">{{ job.posted_at|timesince }} {% trans "ago" %}</span>
+                                <a href="{% url 'details' job.id %}" class="btn btn-primary">{% trans "Job Details" %}</a>
                             </div>
                         </div>
                         {% empty %}
-                        <p>No related jobs found.</p>
+                        <p>{% trans "No related jobs found." %}</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -884,13 +887,21 @@
             <aside class="w-full lg:w-1/3 space-y-4">
                 <div class="bg-white p-4 rounded shadow">
                     <h4 class="font-bold mb-2">Job Overview</h4>
-                    <ul class="text-sm text-gray-700 space-y-1">
+                    <!-- <ul class="text-sm text-gray-700 space-y-1">
                         <li><strong>Posted:</strong> {{ job.posted_at|timesince }} ago</li>
                         <li><strong>Job Type:</strong> {{ job.job_type.name }}</li>
                         <li><strong>Location:</strong> {{ job.company.address }}</li>
                         <li><strong>Experience:</strong> {{ job.experience.level }}</li>
                         <li><strong>Salary:</strong> Rs {{ job.salary_min }} - Rs {{ job.salary_max }}</li>
-                    </ul>
+                    </ul> -->
+
+                    <div class="mb-6 text-gray-700 space-y-1">
+                        <p><strong>{% trans "Posted:" %}</strong> {{ job.posted_at|timesince }} {% trans "ago" %}</p>
+                        <p><strong>{% trans "Job Type:" %}</strong> {{ job.job_type.name }}</p>
+                        <p><strong>{% trans "Location:" %}</strong> {{ job.company.address }}</p>
+                        <p><strong>{% trans "Experience" %} :</strong> {{ job.experience.level }}</p>
+                        <p><strong>{% trans "Salary:" %}</strong> Rs {{ job.salary_min }} - Rs {{ job.salary_max }}</p>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded shadow overflow-hidden">
@@ -903,61 +914,61 @@
 
         </div>
     </div>
+<!-- Apply Modal -->
+<div id="applyModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <button onclick="closeModal()" class="close-btn"><i class="fas fa-times"></i></button>
+            <h2><i class="fas fa-briefcase mr-2"></i>{% trans "Apply for Position" %}</h2>
+            <p>{{ job.title }} {% trans "at" %} {{ job.company.name }}</p>
+        </div>
 
-     <!-- Apply Modal -->
-     <div id="applyModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <button onclick="closeModal()" class="close-btn"><i class="fas fa-times"></i></button>
-                <h2><i class="fas fa-briefcase mr-2"></i>Apply for Position</h2>
-                <p>{{ job.title }} at {{ job.company.name }}</p>
+        <div class="modal-body">
+            <div class="user-info">
+                {% if user.image %}
+                <img src="{{ user.image.url }}" alt="{% trans "Profile Picture" %}" class="profile-img" />
+                {% else %}
+                <img src="{% static 'images/default.png' %}" alt="{% trans "Default Profile" %}" class="profile-img" />
+                {% endif %}
+                <div class="user-details">
+                    <h3>{{ user.get_full_name }}</h3>
+                    <p>{{ user.profile.job_title }}</p>
+                </div>
             </div>
 
-            <div class="modal-body">
-                <div class="user-info">
-                    {% if user.image %}
-                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img" />
-                    {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img" />
-                    {% endif %}
-                    <div class="user-details">
-                        <h3>{{ user.get_full_name }}</h3>
-                        <p>{{ user.profile.job_title }}</p>
+            <form id="applicationForm" onsubmit="submitApplication(event)" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-envelope mr-2"></i>{% trans "Email Address" %}</label>
+                    <input type="email" class="form-input" value="{{ user.email }}" name="email" readonly required />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-phone mr-2"></i>{% trans "Phone" %}</label>
+                    <input type="tel" class="form-input" value="{{ user.phone_no }}" name="phone"
+                        placeholder="+977 98XXXXXXXX" required inputmode="numeric" pattern="[0-9]*"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-file-alt mr-2"></i>{% trans "Upload Resume/CV" %}</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="resume" name="resume" class="file-input" required />
+                        <label for="resume" class="file-input-label">
+                            <i class="fas fa-upload"></i> {% trans "Choose File" %}
+                        </label>
+                        <p class="file-info" id="file-name">{% trans "No file chosen" %}</p>
                     </div>
                 </div>
 
-                <form id="applicationForm" onsubmit="submitApplication(event)">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-envelope mr-2"></i>Email Address</label>
-                        <input type="email" class="form-input" value="{{ user.email }}" name="email" readonly required />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-phone mr-2"></i>Contact Number</label>
-                        <input type="tel" class="form-input" value="{{ user.phone_no }}" name="phone"
-                            placeholder="+977 98XXXXXXXX" required inputmode="numeric" pattern="[0-9]*"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-file-alt mr-2"></i>Upload Resume/CV</label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="resume" class="file-input" required />
-                            <label for="resume" class="file-input-label">
-                                <i class="fas fa-upload"></i> Choose File
-                            </label>
-                            <p class="file-info" id="file-name">No file chosen</p>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane mr-2"></i>Submit Application
-                    </button>
-                </form>
-            </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane mr-2"></i>{% trans "Submit Application" %}
+                </button>
+            </form>
         </div>
     </div>
+</div>
+
 
     <script>
         const isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}";

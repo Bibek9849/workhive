@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
 {% load humanize %}
+{% load i18n %}
 
 <html lang="en" data-theme="light">
 
@@ -146,7 +147,7 @@
     {% include 'navbar.html' %}
 
     <section class="hero">
-        <h1 id="hero-title">Find your <span class="blue">new job</span> or <span class="blue">intern</span> today</h1>
+        <h1 id="hero-title">{% trans "Find your" %} <span class="blue">{% trans "new job" %}</span> {% trans "or" %} <span class="blue">{% trans "intern" %}</span> {% trans "today" %}</h1>
         <form method="GET" action="{% url 'job' %}">
             <div class="search-box">
                 <input type="text" name="title" placeholder="Job Title or Company">
@@ -159,13 +160,13 @@
                 </select> -->
 
                 <select name="category">
-                    <option value="">Select Category</option>
+                    <option value="">{% trans "Select Category" %}</option>
                     {% for category in categories %}
                     <option value="{{ category.id }}">{{ category.name }}</option>
                     {% endfor %}
                 </select>
 
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
             </div>
         </form>
 
@@ -173,25 +174,27 @@
             <div>
                 <i class="fas fa-briefcase fa-2x blue"></i>
                 <strong>{{ job_count|intcomma }}</strong>
-                <p>Jobs</p>
+                <p>{% trans "Jobs" %}</p>
             </div>
             <div>
                 <i class="fas fa-user fa-2x blue"></i>
                 <strong>{{ user_count|intcomma }}</strong>
-                <p>Candidates</p>
+                <p>{% trans "Candidates" %}</p>
             </div>
             <div>
                 <i class="fas fa-building fa-2x blue"></i>
                 <strong>{{ company_count|intcomma }}</strong>
-                <p>Companies</p>
+                <p>{% trans "Companies" %}</p>
             </div>
         </div>
+        
     </section>
 
     <section class="jobs-section">
         <div class="jobs-header">
-            <h2>Recent Jobs Available</h2>
-            <a href="{% url 'job' %}">View all</a>
+            <h2>{% trans "Recent Jobs Available" %}</h2>
+            <a href="{% url 'job' %}">{% trans "View all" %}</a>
+            
         </div>
 
         <div class="job-cards-container">
@@ -221,8 +224,8 @@
                 </div>
 
                 <div class="job-card-footer">
-                    <span class="posted">{{ job.posted_at|timesince }} ago</span>
-                    <a href="{% url 'details' job.id %}" class="btn btn-primary">Job Details</a>
+                    <p class="posted">{{ job.posted_at|timesince }} {% trans "ago" %}</p>
+                    <a href="{% url 'details' job.id %}" class="btn btn-primary">{% trans "Job Details" %}</a>
                 </div>
             </div>
             {% empty %}

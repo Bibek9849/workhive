@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 {% load static %}
+{% load static i18n %}
+
 
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WorkHive - Profile</title>
+    <title>{% trans "WorkHive - Profile" %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
@@ -58,7 +60,7 @@
                             <img id="profile-preview"
                                 src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'images/default.png' %}{% endif %}"
                                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
-                                alt="Profile Picture" />
+                                alt="{% trans 'Profile Picture' %}" />
 
                             <label for="profile-upload"
                                 class="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full cursor-pointer shadow-md hover:bg-blue-700 transition">
@@ -79,19 +81,19 @@
                     <!-- Navigation Links -->
                     <nav class="space-y-2">
                         <a href="#" class="sidebar-link active flex items-center text-sm font-medium">
-                            <i class="fas fa-user mr-3"></i>
-                            Profile
+                            <i class="fas fa-user mr-3"></i> {% trans "Profile" %}
+
                         </a>
                         <a href="{% url 'change' %}"
                             class="sidebar-link flex items-center text-gray-600 text-sm font-medium">
-                            <i class="fas fa-lock mr-3"></i>
-                            Change Password
+                            <i class="fas fa-lock mr-3"></i> {% trans "Change Password" %}
+
                         </a>
 
                         <a href="{% url 'applied' %}"
                             class="sidebar-link flex items-center text-gray-600 text-sm font-medium">
-                            <i class="fas fa-briefcase mr-3"></i>
-                            Applied Jobs
+                            <i class="fas fa-briefcase mr-3"></i> {% trans "Applied Jobs" %}
+
                             <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">3</span>
                         </a>
                     </nav>
@@ -102,117 +104,115 @@
             <main class="lg:col-span-3">
                 <div class="bg-white rounded-2xl shadow-lg p-8">
                     <div class="mb-8">
-                        <h1 class="text-3xl font-bold text-gray-900">Edit Profile</h1>
-                        <p class="text-gray-600 mt-2">Update your personal information</p>
+                        <h1 class="text-3xl font-bold text-gray-900">{% trans "Edit Profile" %}</h1>
+                        <p class="text-gray-600 mt-2">{% trans "Update your personal information" %}</p>
                     </div>
 
                     <form method="post" enctype="multipart/form-data" class="space-y-8">
                         {% csrf_token %}
-                    
-                        <!-- Personal Information -->
+
+                        <!-- Personal Info -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">First Name</label>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">{% trans "First Name" %}</label>
                                 <input type="text" name="first_name" value="{{ user.first_name }}"
-                                    class="w-full px-4 py-3 border rounded-lg" />
+                                       class="w-full px-4 py-3 border rounded-lg" />
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Last Name</label>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">{% trans "Last Name" %}</label>
                                 <input type="text" name="last_name" value="{{ user.last_name }}"
-                                    class="w-full px-4 py-3 border rounded-lg" />
+                                       class="w-full px-4 py-3 border rounded-lg" />
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Date of Birth</label>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">{% trans "Date of Birth" %}</label>
                                 <input type="date" name="dob" value="{{ user.dob }}"
-                                    class="w-full px-4 py-3 border rounded-lg" />
+                                       class="w-full px-4 py-3 border rounded-lg" />
                             </div>
                         </div>
-                    
+
                         <!-- Professional Info -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Experience</label>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">{% trans "Experience" %}</label>
                                 <select name="experience" class="w-full px-4 py-3 border rounded-lg">
-                                    <option {% if user.experience == "Fresher" %}selected{% endif %}>Fresher</option>
-                                    <option {% if user.experience == "1-3 years" %}selected{% endif %}>1-3 years</option>
-                                    <option {% if user.experience == "3-5 years" %}selected{% endif %}>3-5 years</option>
-                                    <option {% if user.experience == "5+ years" %}selected{% endif %}>5+ years</option>
+                                    <option {% if user.experience == "Fresher" %}selected{% endif %}>{% trans "Fresher" %}</option>
+                                    <option {% if user.experience == "1-3 years" %}selected{% endif %}>{% trans "1-3 years" %}</option>
+                                    <option {% if user.experience == "3-5 years" %}selected{% endif %}>{% trans "3-5 years" %}</option>
+                                    <option {% if user.experience == "5+ years" %}selected{% endif %}>{% trans "5+ years" %}</option>
                                 </select>
                             </div>
-                    
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Gender</label>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">{% trans "Gender" %}</label>
                                 <select name="gender" class="w-full px-4 py-3 border rounded-lg">
-                                    <option {% if user.gender == "Male" %}selected{% endif %}>Male</option>
-                                    <option {% if user.gender == "Female" %}selected{% endif %}>Female</option>
-                                    <option {% if user.gender == "Other" %}selected{% endif %}>Other</option>
+                                    <option {% if user.gender == "Male" %}selected{% endif %}>{% trans "Male" %}</option>
+                                    <option {% if user.gender == "Female" %}selected{% endif %}>{% trans "Female" %}</option>
+                                    <option {% if user.gender == "Other" %}selected{% endif %}>{% trans "Other" %}</option>
                                 </select>
                             </div>
-                    
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Education</label>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">{% trans "Education" %}</label>
                                 <select name="education" class="w-full px-4 py-3 border rounded-lg">
-                                    <option {% if user.education == "SEE" %}selected{% endif %}>SEE</option>
-                                    <option {% if user.education == "+2" %}selected{% endif %}>+2</option>
-                                    <option {% if user.education == "Bachelor's" %}selected{% endif %}>Bachelor's</option>
-                                    <option {% if user.education == "Master's" %}selected{% endif %}>Master's</option>
+                                    <option {% if user.education == "SEE" %}selected{% endif %}>{% trans "SEE" %}</option>
+                                    <option {% if user.education == "+2" %}selected{% endif %}>{% trans "+2" %}</option>
+                                    <option {% if user.education == "Bachelor's" %}selected{% endif %}>{% trans "Bachelor's" %}</option>
+                                    <option {% if user.education == "Master's" %}selected{% endif %}>{% trans "Master's" %}</option>
                                 </select>
                             </div>
                         </div>
-                    
+
                         <!-- Contact Info -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Phone</label>
-                                <input type="tel" name="phone_no" placeholder="+977 98XXXXXXXX" value="{{ user.phone_no }}"
-                                    class="w-full px-4 py-3 border rounded-lg" />
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">{% trans "Phone" %}</label>
+                                <input type="tel" name="phone_no" value="{{ user.phone_no }}" placeholder="+977 98XXXXXXXX"
+                                       class="w-full px-4 py-3 border rounded-lg" />
                             </div>
                         </div>
-                    
+
                         <!-- Skills -->
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 block mb-3">Skills</label>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="skills" value="Python"
-                                           {% if "Python" in skill_names %}checked{% endif %}
-                                           class="form-checkbox text-blue-600" />
-                                    <span class="text-sm">Python</span>
-                                </label>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="skills" value="Java"
-                                           {% if "Java" in skill_names %}checked{% endif %}
-                                           class="form-checkbox text-blue-600" />
-                                    <span class="text-sm">Java</span>
-                                </label>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="skills" value="Flutter"
-                                           {% if "Flutter" in skill_names %}checked{% endif %}
-                                           class="form-checkbox text-blue-600" />
-                                    <span class="text-sm">Flutter</span>
-                                </label>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="skills" value="JavaScript"
-                                           {% if "JavaScript" in skill_names %}checked{% endif %}
-                                           class="form-checkbox text-blue-600" />
-                                    <span class="text-sm">JavaScript</span>
-                                </label>
-                            </div>
-                        </div>
-                    
+<div>
+    <label class="text-sm font-medium text-gray-700 block mb-3">{% trans "Skills" %}</label>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <label class="flex items-center space-x-2">
+            <input type="checkbox" name="skills" value="Python"
+                   {% if "Python" in skill_names %}checked{% endif %}
+                   class="form-checkbox text-blue-600" />
+            <span class="text-sm">{% trans "Python" %}</span>
+        </label>
+        <label class="flex items-center space-x-2">
+            <input type="checkbox" name="skills" value="Java"
+                   {% if "Java" in skill_names %}checked{% endif %}
+                   class="form-checkbox text-blue-600" />
+            <span class="text-sm">{% trans "Java" %}</span>
+        </label>
+        <label class="flex items-center space-x-2">
+            <input type="checkbox" name="skills" value="Flutter"
+                   {% if "Flutter" in skill_names %}checked{% endif %}
+                   class="form-checkbox text-blue-600" />
+            <span class="text-sm">{% trans "Flutter" %}</span>
+        </label>
+        <label class="flex items-center space-x-2">
+            <input type="checkbox" name="skills" value="JavaScript"
+                   {% if "JavaScript" in skill_names %}checked{% endif %}
+                   class="form-checkbox text-blue-600" />
+            <span class="text-sm">{% trans "JavaScript" %}</span>
+        </label>
+    </div>
+</div>
+
+
                         <!-- Buttons -->
                         <div class="flex justify-end gap-4">
                             <button type="submit"
-                                class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-                                <i class="fas fa-save mr-2"></i> Save Changes
+                                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                                <i class="fas fa-save mr-2"></i> {% trans "Save Changes" %}
                             </button>
                             <button type="reset"
-                                class="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition">
-                                <i class="fas fa-times mr-2"></i> Cancel
+                                    class="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition">
+                                <i class="fas fa-times mr-2"></i> {% trans "Cancel" %}
                             </button>
                         </div>
                     </form>
-                    
                 </div>
             </main>
         </div>

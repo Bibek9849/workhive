@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +7,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkHive - Find Jobs & Internships</title>
+    <title>{% trans "WorkHive – Your Career Starts Here" %}</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -306,25 +308,23 @@
 
     <main>
         <section class="welcome-section">
-            <h2>Welcome to WorkHive – Your Career Starts Here</h2>
+            <h2>{% trans "Welcome to WorkHive – Your Career Starts Here" %}</h2>
             <p>
-                WorkHive is a job and internship platform made especially for students and fresh graduates. We
-                understand that starting a career can be confusing, especially when most job websites are designed for
-                experienced professionals. That's why we built WorkHive – a simple, clean, and easy-to-use platform that
-                helps you take your first step into the professional world.
+                {% blocktrans %}
+                WorkHive is a job and internship platform made especially for students and fresh graduates. We understand that starting a career can be confusing, especially when most job websites are designed for experienced professionals. That's why we built WorkHive – a simple, clean, and easy-to-use platform that helps you take your first step into the professional world.
+                {% endblocktrans %}
             </p>
         </section>
 
         <section class="about-image">
             <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=400&fit=crop&crop=center"
-                alt="Team collaboration" />
+                alt="{% trans 'Team collaboration' %}" />
         </section>
 
         <section class="how-it-works">
-            <h2>How it works</h2>
+            <h2>{% trans "How it works" %}</h2>
             <p>
-                Get started in just four simple steps. Our streamlined process makes it easy to find and apply for your
-                dream job or internship.
+                {% trans "Get started in just four simple steps. Our streamlined process makes it easy to find and apply for your dream job or internship." %}
             </p>
 
             <div class="steps-grid">
@@ -332,43 +332,38 @@
                     <div class="step-icon">
                         <i class="fa-solid fa-user-plus"></i>
                     </div>
-                    <h3>Create Account</h3>
-                    <p>Start by entering your details to join us. Stay connected and explore new opportunities tailored
-                        just for you.</p>
+                    <h3>{% trans "Create Account" %}</h3>
+                    <p>{% trans "Start by entering your details to join us. Stay connected and explore new opportunities tailored just for you." %}</p>
                 </div>
 
                 <div class="step-card">
                     <div class="step-icon">
                         <i class="fa-solid fa-upload"></i>
                     </div>
-                    <h3>Upload Resume</h3>
-                    <p>Upload your resume and let employers discover your potential. Showcase your skills and experience
-                        professionally.</p>
+                    <h3>{% trans "Upload Resume" %}</h3>
+                    <p>{% trans "Upload your resume and let employers discover your potential. Showcase your skills and experience professionally." %}</p>
                 </div>
 
                 <div class="step-card">
                     <div class="step-icon">
                         <i class="fa-solid fa-briefcase"></i>
                     </div>
-                    <h3>Find Jobs</h3>
-                    <p>Browse through thousands of job opportunities and internships. Filter by location, industry, and
-                        requirements.</p>
+                    <h3>{% trans "Find Jobs" %}</h3>
+                    <p>{% trans "Browse through thousands of job opportunities and internships. Filter by location, industry, and requirements." %}</p>
                 </div>
 
                 <div class="step-card">
                     <div class="step-icon">
                         <i class="fa-solid fa-paper-plane"></i>
                     </div>
-                    <h3>Apply Job</h3>
-                    <p>Apply to jobs with just one click. Track your applications and get notifications about your
-                        application status.</p>
+                    <h3>{% trans "Apply Job" %}</h3>
+                    <p>{% trans "Apply to jobs with just one click. Track your applications and get notifications about your application status." %}</p>
                 </div>
             </div>
         </section>
     </main>
 
     {% include 'footer.html' %}
-
 
     <script>
         function toggleLanguage() {
@@ -377,47 +372,36 @@
             const title = document.getElementById('hero-title');
 
             if (label.textContent === 'English') {
-                // Switch to Nepali
                 flag.src = 'https://flagcdn.com/16x12/np.png';
                 label.textContent = 'नेपाली';
                 title.innerHTML = 'आफ्नो <span style="color: #fbbf24;">नयाँ जागिर</span> वा <span style="color: #fbbf24;">इन्टर्न</span> खोज्नुहोस्';
             } else {
-                // Switch to English
                 flag.src = 'https://flagcdn.com/16x12/gb.png';
                 label.textContent = 'English';
                 title.innerHTML = 'Find your <span style="color: #fbbf24;">dream job</span> or <span style="color: #fbbf24;">internship</span> today';
             }
         }
 
-        // Smooth scrolling for navigation links
+        // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
+                    target.scrollIntoView({ behavior: 'smooth' });
                 }
             });
         });
 
-        // Header background change on scroll
+        // Header background
         window.addEventListener('scroll', function () {
             const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-            }
+            header.style.background = window.scrollY > 100
+                ? 'rgba(255, 255, 255, 0.98)'
+                : 'rgba(255, 255, 255, 0.95)';
         });
 
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
+        // Intersection Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -425,9 +409,8 @@
                     entry.target.style.transform = 'translateY(0)';
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        // Observe step cards for scroll animations
         document.querySelectorAll('.step-card').forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(30px)';
@@ -440,11 +423,9 @@
             dropdown.classList.toggle('show');
         }
 
-        // Close dropdown when clicking outside
         window.addEventListener('click', function (e) {
             const dropdown = document.getElementById('profile-dropdown');
             const button = document.getElementById('profile-button');
-
             if (!button.contains(e.target)) {
                 dropdown.classList.remove('show');
             }

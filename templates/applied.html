@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load i18n %}
 
 <html lang="en">
 
@@ -237,7 +238,7 @@
                         <p class="text-gray-500 text-sm">{{ user.email }}</p>
 
                         <!-- Profile Completion -->
-                        <div class="mt-4">
+                        <!-- <div class="mt-4">
                             <div class="flex justify-between text-xs text-gray-600 mb-1">
                                 <span>Profile Completion</span>
                                 <span>75%</span>
@@ -245,20 +246,21 @@
                             <div class="w-full bg-gray-200 rounded-full h-2">
                                 <div class="profile-completion h-2 rounded-full" style="width: 75%"></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
+                 
                     <nav class="space-y-2">
                         <a href="{% url 'profile' %}"
                             class="sidebar-link flex items-center text-gray-600 text-sm font-medium">
-                            <i class="fas fa-user mr-3"></i> Profile
+                            <i class="fas fa-user mr-3"></i> {% trans "Profile" %}
                         </a>
                         <a href="{% url 'change' %}"
                             class="sidebar-link flex items-center text-gray-600 text-sm font-medium">
-                            <i class="fas fa-lock mr-3"></i> Change Password
+                            <i class="fas fa-lock mr-3"></i> {% trans "Change Password" %}
                         </a>
                         <a href="{% url 'applied' %}" class="sidebar-link active flex items-center text-sm font-medium">
-                            <i class="fas fa-briefcase mr-3"></i> Applied Jobs
+                            <i class="fas fa-briefcase mr-3"></i> {% trans "Applied Jobs" %}
                             <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">3</span>
                         </a>
                     </nav>
@@ -269,7 +271,7 @@
             <main class="lg:col-span-3">
                 <div class="bg-white rounded-2xl shadow-lg p-8">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">Applied Jobs</h2>
+                        <h2 class="text-2xl font-bold text-gray-900">{% trans "Applied Jobs" %}</h2>
                         <div class="text-sm text-gray-500">
                             <i class="fas fa-check-circle text-green-500 mr-1"></i>
                             {{ applications|length }} Application{{ applications|length|pluralize }}
@@ -330,9 +332,10 @@
                     {% else %}
                     <div class="empty-state">
                         <i class="fas fa-briefcase"></i>
-                        <h3 class="text-lg font-semibold mb-2">No Applications Yet</h3>
-                        <p class="text-gray-500">You haven't applied to any jobs yet. Start exploring opportunities!</p>
+                        <h3 class="text-lg font-semibold mb-2">{% trans "No Applications Yet" %}</h3>
+                        <p class="text-gray-500">{% trans "You haven't applied to any jobs yet. Start exploring opportunities!" %}</p>
                     </div>
+                    
                     {% endif %}
                 </div>
             </main>

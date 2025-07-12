@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 {% load static %}
+{% load i18n %}
 
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WorkHive - Change Password</title>
+    <title>{% trans "WorkHive - Change Password" %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
@@ -140,20 +141,21 @@
 
                     </div>
                     <!-- Enhanced Navigation Links -->
+                   
                     <nav class="space-y-2">
                         <a href="{% url 'profile' %}"
                             class="sidebar-link flex items-center text-gray-600 text-sm font-medium">
-                            <i class="fas fa-user mr-3"></i>
-                            Profile
+                            <i class="fas fa-user mr-3"></i> {% trans "Profile" %}
+
                         </a>
                         <a href="{% url 'change' %}" class="sidebar-link active flex items-center text-sm font-medium">
-                            <i class="fas fa-lock mr-3"></i>
-                            Change Password
+                            <i class="fas fa-lock mr-3"></i> {% trans "Change Password" %}
+
                         </a>
                         <a href="{% url 'applied' %}"
                             class="sidebar-link flex items-center text-gray-600 text-sm font-medium">
-                            <i class="fas fa-briefcase mr-3"></i>
-                            Applied Jobs
+                            <i class="fas fa-briefcase mr-3"></i> {% trans "Applied Jobs" %}
+
                             <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">3</span>
                         </a>
 
@@ -169,9 +171,9 @@
                         <div>
                             <h1 class="text-3xl font-bold text-gray-900 flex items-center">
                                 <i class="fas fa-shield-alt text-blue-600 mr-3"></i>
-                                Change Password
+                                {% trans "Change Password" %}
                             </h1>
-                            <p class="text-gray-600 mt-2">Keep your account secure with a strong password</p>
+                            <p class="text-gray-600 mt-2">{% trans "Keep your account secure with a strong password" %}</p>
                         </div>
                         <div class="hidden sm:block">
                             <div
@@ -185,128 +187,155 @@
                         <!-- Current Password -->
                         <div class="bg-gray-50 rounded-xl p-6">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                <i class="fas fa-unlock-alt text-gray-600 mr-2"></i>
-                                Current Password
+                                
+                                <i class="fas fa-lock text-gray-600 mr-2"></i>
+                                {% trans "Current Password" %}
                             </h3>
                             <div class="relative">
-                                <input type="password" id="currentPassword" placeholder="Enter your current password"
-                                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus" />
+                                <input 
+                                    type="password" 
+                                    id="currentPassword" 
+                                    name="currentPassword"
+                                    placeholder="{% trans 'Enter your current password' %}"
+                                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus"
+                                />
                                 <button type="button" class="absolute right-3 top-3 password-toggle"
                                     onclick="togglePassword('currentPassword')">
                                     <i class="fas fa-eye text-gray-400"></i>
                                 </button>
                             </div>
+                            
                         </div>
 
                         <!-- New Password Section -->
                         <div class="bg-gray-50 rounded-xl p-6">
                             <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                                 <i class="fas fa-lock text-gray-600 mr-2"></i>
-                                New Password
+                                {% trans "New Password" %}
                             </h3>
-
+                        
                             <!-- New Password Input -->
                             <div class="space-y-4">
                                 <div class="relative">
-                                    <input type="password" id="newPassword" placeholder="Enter your new password"
+                                    <input
+                                        type="password"
+                                        id="newPassword"
+                                        name="newPassword"
+                                        placeholder="{% trans 'Enter your new password' %}"
                                         class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus"
-                                        oninput="checkPasswordStrength()" />
-                                    <button type="button" class="absolute right-3 top-3 password-toggle"
-                                        onclick="togglePassword('newPassword')">
+                                        oninput="checkPasswordStrength()"
+                                    />
+                                    <button
+                                        type="button"
+                                        class="absolute right-3 top-3 password-toggle"
+                                        onclick="togglePassword('newPassword')"
+                                    >
                                         <i class="fas fa-eye text-gray-400"></i>
                                     </button>
                                 </div>
-
+                        
                                 <!-- Password Strength Indicator -->
                                 <div class="space-y-2">
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600">Password Strength</span>
+                                        <span class="text-gray-600">{% trans "Password Strength" %}</span>
                                         <span id="strengthText" class="font-medium">Weak</span>
                                     </div>
                                     <div class="w-full bg-gray-200 rounded-full h-1">
-                                        <div id="strengthBar" class="password-strength strength-weak" style="width: 0%">
-                                        </div>
+                                        <div
+                                            id="strengthBar"
+                                            class="password-strength strength-weak"
+                                            style="width: 0%"
+                                        ></div>
                                     </div>
                                 </div>
-
+                        
                                 <!-- Password Requirements -->
                                 <div class="password-requirements space-y-2 mt-4">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Password must contain:</p>
+                                    <p class="text-sm font-medium text-gray-700 mb-2">{% trans "Password must contain:" %}</p>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                                         <div id="req-length" class="requirement-unmet flex items-center text-xs">
                                             <i class="fas fa-times-circle mr-2"></i>
-                                            At least 8 characters
+                                            {% trans "At least 8 characters" %}
                                         </div>
                                         <div id="req-uppercase" class="requirement-unmet flex items-center text-xs">
                                             <i class="fas fa-times-circle mr-2"></i>
-                                            One uppercase letter
+                                            {% trans "One uppercase letter" %}
                                         </div>
                                         <div id="req-lowercase" class="requirement-unmet flex items-center text-xs">
                                             <i class="fas fa-times-circle mr-2"></i>
-                                            One lowercase letter
+                                            {% trans "One lowercase letter" %}
                                         </div>
                                         <div id="req-number" class="requirement-unmet flex items-center text-xs">
                                             <i class="fas fa-times-circle mr-2"></i>
-                                            One number
+                                            {% trans "One number" %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
 
-                        <!-- Confirm Password -->
-                        <div class="bg-gray-50 rounded-xl p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                <i class="fas fa-check-double text-gray-600 mr-2"></i>
-                                Confirm New Password
-                            </h3>
-                            <div class="relative">
-                                <input type="password" id="confirmPassword" placeholder="Confirm your new password"
-                                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus"
-                                    oninput="checkPasswordMatch()" />
-                                <button type="button" class="absolute right-3 top-3 password-toggle"
-                                    onclick="togglePassword('confirmPassword')">
-                                    <i class="fas fa-eye text-gray-400"></i>
-                                </button>
-                            </div>
-                            <div id="passwordMatch" class="mt-2 text-sm hidden">
-                                <div id="matchSuccess" class="text-green-600 flex items-center hidden">
-                                    <i class="fas fa-check-circle mr-2"></i>
-                                    Passwords match
-                                </div>
-                                <div id="matchError" class="text-red-600 flex items-center hidden">
-                                    <i class="fas fa-times-circle mr-2"></i>
-                                    Passwords don't match
-                                </div>
-                            </div>
-                        </div>
+                       <!-- Confirm Password -->
+<div class="bg-gray-50 rounded-xl p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+        <i class="fas fa-check-double text-gray-600 mr-2"></i>
+        {% trans "Confirm New Password" %}
+    </h3>
+    <div class="relative">
+        <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="{% trans 'Confirm your new password' %}"
+            class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus"
+            oninput="checkPasswordMatch()"
+        />
+        <button
+            type="button"
+            class="absolute right-3 top-3 password-toggle"
+            onclick="togglePassword('confirmPassword')"
+        >
+            <i class="fas fa-eye text-gray-400"></i>
+        </button>
+    </div>
+    <div id="passwordMatch" class="mt-2 text-sm hidden">
+        <div id="matchSuccess" class="text-green-600 flex items-center hidden">
+            <i class="fas fa-check-circle mr-2"></i>
+            {% trans "Passwords match" %}
+        </div>
+        <div id="matchError" class="text-red-600 flex items-center hidden">
+            <i class="fas fa-times-circle mr-2"></i>
+            {% trans "Passwords don't match" %}
+        </div>
+    </div>
+</div>
 
-                        <!-- Security Tip -->
-                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                            <div class="flex items-start">
-                                <i class="fas fa-info-circle text-blue-600 mt-1 mr-3"></i>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-blue-900">Security Tip</h4>
-                                    <p class="text-sm text-blue-700 mt-1">
-                                        Choose a password that's unique to WorkHive and avoid using personal
-                                        information.
-                                        Consider using a password manager for better security.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+<!-- Security Tip -->
+<div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+    <div class="flex items-start">
+        <i class="fas fa-info-circle text-blue-600 mt-1 mr-3"></i>
+        <div>
+            <h4 class="text-sm font-semibold text-blue-900">{% trans "Security Tip" %}</h4>
+            <p class="text-sm text-blue-700 mt-1">
+                {% trans "Choose a password that's unique to WorkHive and avoid using personal information. Consider using a password manager for better security." %}
+            </p>
+        </div>
+    </div>
+</div>
 
-                        <!-- Action Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-4 pt-6">
-                            <button type="submit"
-                                class="flex-1 bg-[#004B8D] text-white py-3 px-6 rounded-lg hover:shadow-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                                id="updateButton" disabled>
-                                <i class="fas fa-shield-check mr-2"></i>
-                                Update Password
-                            </button>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 pt-6">
+    <button
+        type="submit"
+        id="updateButton"
+        disabled
+        class="flex-1 bg-[#004B8D] text-white py-3 px-6 rounded-lg hover:shadow-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+        <i class="fas fa-shield-check mr-2"></i>
+        {% trans "Update Password" %}
+    </button>
+</div>
 
-
-                        </div>
                     </form>
                 </div>
             </main>

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 {% load static %}
+{% load i18n %}
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>{% trans "Contact Us" %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 </head>
@@ -14,7 +15,7 @@
     {% include 'navbar.html' %}
 
     <div class="container mx-auto px-4 py-10">
-        <h1 class="text-2xl font-bold text-center mb-10">Contact Us</h1>
+        <h1 class="text-2xl font-bold text-center mb-10">{% trans "Contact Us" %}</h1>
 
         <!-- Success Message -->
         {% if messages %}
@@ -29,13 +30,13 @@
 
             <!-- Left Side Content -->
             <div class="w-full lg:w-1/2">
-                <h2 class="text-3xl font-bold mb-6">You Will Grow, You Will Succeed. We Promise That</h2>
+                <h2 class="text-3xl font-bold mb-6">{% trans "You Will Grow, You Will Succeed. We Promise That" %}</h2>
 
                 <div class="space-y-4 text-gray-800">
                     <div class="flex items-center gap-3">
                         <span class="text-blue-600">☎</span>
                         <div>
-                            <p class="font-bold">Call for inquiry</p>
+                            <p class="font-bold">{% trans "Call for inquiry" %}</p>
                             <p>9849943368</p>
                         </div>
                     </div>
@@ -43,7 +44,7 @@
                     <div class="flex items-center gap-3">
                         <span class="text-blue-600">✉</span>
                         <div>
-                            <p class="font-bold">Send us email</p>
+                            <p class="font-bold">{% trans "Send us email" %}</p>
                             <p>pandeybibek9849@gmail.com</p>
                         </div>
                     </div>
@@ -51,16 +52,16 @@
                     <div class="flex items-center gap-3">
                         <span class="text-blue-600">⏰</span>
                         <div>
-                            <p class="font-bold">Opening hours</p>
-                            <p>Mon - Fri: 10AM - 10PM</p>
+                            <p class="font-bold">{% trans "Opening hours" %}</p>
+                            <p>{% trans "Mon - Fri: 10AM - 10PM" %}</p>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <span class="text-blue-600">📍</span>
                         <div>
-                            <p class="font-bold">Office</p>
-                            <p>Kathmandu</p>
+                            <p class="font-bold">{% trans "Office" %}</p>
+                            <p>{% trans "Kathmandu" %}</p>
                         </div>
                     </div>
                 </div>
@@ -68,24 +69,19 @@
 
             <!-- Right Side Contact Form -->
             <div class="w-full lg:w-1/2 bg-blue-50 p-6 rounded-lg shadow">
-                <h3 class="text-xl font-bold text-center mb-2">Contact Info</h3>
-                <p class="text-center text-gray-600 mb-6">We’d love to hear from you! Please fill out the form below.
-                </p>
+                <h3 class="text-xl font-bold text-center mb-2">{% trans "Contact Info" %}</h3>
+                <p class="text-center text-gray-600 mb-6">{% trans "We’d love to hear from you! Please fill out the form below." %}</p>
 
                 <form method="POST" action="{% url 'contact' %}" class="space-y-4">
                     {% csrf_token %}
                     <div class="flex gap-4">
-                        <input type="text" name="first_name" placeholder="First Name" class="w-1/2 p-2 border rounded"
-                            required>
-                        <input type="text" name="last_name" placeholder="Last Name" class="w-1/2 p-2 border rounded"
-                            required>
+                        <input type="text" name="first_name" placeholder="{% trans 'First Name' %}" class="w-1/2 p-2 border rounded" required>
+                        <input type="text" name="last_name" placeholder="{% trans 'Last Name' %}" class="w-1/2 p-2 border rounded" required>
                     </div>
-                    <input type="email" name="email" placeholder="Email Address" class="w-full p-2 border rounded"
-                        required>
-                    <textarea name="message" placeholder="Your Message..." class="w-full p-2 border rounded h-32"
-                        required></textarea>
+                    <input type="email" name="email" placeholder="{% trans 'Email Address' %}" class="w-full p-2 border rounded" required>
+                    <textarea name="message" placeholder="{% trans 'Your Message...' %}" class="w-full p-2 border rounded h-32" required></textarea>
                     <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">
-                        Send Message
+                        {% trans "Send Message" %}
                     </button>
                 </form>
             </div>
@@ -103,7 +99,6 @@
         window.addEventListener('click', function (e) {
             const dropdown = document.getElementById('profile-dropdown');
             const button = document.getElementById('profile-button');
-
             if (!button.contains(e.target)) {
                 dropdown.classList.remove('show');
             }
