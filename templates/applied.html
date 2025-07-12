@@ -88,6 +88,124 @@
             color: #374151;
             font-weight: 500;
         }
+
+        /* New styles for matrix layout */
+        .job-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .job-card-matrix {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-card-matrix:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #10b981;
+        }
+
+        .applied-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tick-icon {
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #10b981;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .job-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .job-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .job-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .job-company {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .job-meta-matrix {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .job-meta-item {
+            background: #f3f4f6;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .applied-time {
+            color: #6b7280;
+            font-size: 0.75rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
     </style>
 </head>
 
@@ -147,33 +265,74 @@
                 </div>
             </aside>
 
-            <!-- Change Password Section -->
+            <!-- Applied Jobs Section -->
             <main class="lg:col-span-3">
                 <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Applied Jobs</h2>
+                        <div class="text-sm text-gray-500">
+                            <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                            {{ applications|length }} Application{{ applications|length|pluralize }}
+                        </div>
+                    </div>
+
                     {% if applications %}
-                    {% for app in applications %}
-                    <div class="job-card mb-6">
-                        <div class="posted">{{ app.applied_at|timesince }} ago</div>
-                        <div class="job-info-left flex items-center gap-4">
-                            <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Job Icon"
-                                class="w-12 h-12">
-                            <div class="job-details">
-                                <h3 class="text-lg font-semibold">{{ app.job.title }}</h3>
-                                <p>{{ app.job.company.name }}</p>
-                                <div class="job-meta flex flex-wrap gap-3 text-sm text-gray-600 mt-1">
-                                    <span><i class="fas fa-laptop-code"></i> {{ app.job.category.name }}</span>
-                                    <span><i class="fas fa-clock"></i> {{ app.job.job_type.name }}</span>
-                                    <span><i class="fas fa-money-bill"></i> Rs {{ app.job.min_salary }} - Rs {{
-                                        app.job.max_salary }}</span>
-                                    <span><i class="fas fa-map-marker-alt"></i> {{ app.job.location }}</span>
+                    <div class="job-matrix">
+                        {% for app in applications %}
+                        <div class="job-card-matrix">
+                            <!-- Applied Badge with Tick -->
+                            <div class="applied-badge">
+                                <div class="tick-icon">✓</div>
+                                Applied
+                            </div>
+
+                            <!-- Job Header -->
+                            <div class="job-header">
+                                <img src="{{ app.job.company.logo.url }}" alt="Job Icon" class="job-icon">
+                                <div class="flex-1">
+                                    <h3 class="job-title">{{ app.job.title }}</h3>
+                                    <p class="job-company">{{ app.job.company.name }}</p>
                                 </div>
                             </div>
+
+                            <!-- Job Meta Information -->
+                            <div class="job-meta-matrix">
+                                <div class="job-meta-item">
+                                    <i class="fas fa-laptop-code"></i>
+                                    {{ app.job.category.name }}
+                                </div>
+                                <div class="job-meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    {{ app.job.job_type.name }}
+                                </div>
+                                <div class="job-meta-item">
+                                    <i class="fas fa-money-bill"></i>
+                                    {% if app.job.salary_max %}
+                                    Rs {{ app.job.salary_min }} - Rs {{ app.job.salary_max }}
+                                    {% else %}
+                                    Rs {{ app.job.salary_min }}+
+                                    {% endif %}
+                                </div>
+                                <div class="job-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    {{ app.job.company.address }}
+                                </div>
+                            </div>
+
+                            <!-- Applied Time -->
+                            <div class="applied-time">
+                                <i class="fas fa-calendar-alt"></i>
+                                Applied {{ app.applied_at|timesince }} ago
+                            </div>
                         </div>
-                        <button disabled class="btn btn-primary mt-4 cursor-not-allowed opacity-70">Applied</button>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                     {% else %}
-                    <p class="text-center text-gray-500">You have not applied to any jobs yet.</p>
+                    <div class="empty-state">
+                        <i class="fas fa-briefcase"></i>
+                        <h3 class="text-lg font-semibold mb-2">No Applications Yet</h3>
+                        <p class="text-gray-500">You haven't applied to any jobs yet. Start exploring opportunities!</p>
+                    </div>
                     {% endif %}
                 </div>
             </main>

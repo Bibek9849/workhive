@@ -44,57 +44,7 @@
 </head>
 
 <body class="bg-gray-50 min-h-screen">
-    <header>
-        <a href="/">
-            <div class="logo">
-                <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo">
-            </div>
-        </a>
-
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'job' %}">Jobs</a></li>
-                <li><a href="{% url 'about' %}">About Us</a></li>
-                <li><a href="{% url 'contact' %}">Contact Us</a></li>
-            </ul>
-        </nav>
-
-        <div class="auth">
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
-                <span id="lang-label">English</span>
-            </div>
-
-            {% if user.is_authenticated %}
-            <!-- After login: Show profile + logout -->
-            <div class="user-menu">
-                <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.image %}
-                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
-                    {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
-                    {% endif %}
-                    <span class="username">{{ user.first_name }}</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-
-                <div id="profile-dropdown" class="profile-dropdown hidden">
-                    <a href="{% url 'profile' %}">Profile</a>
-                    <a href="#">Settings</a>
-                    <a href="{% url 'logout' %}">Logout</a>
-                </div>
-            </div>
-
-
-
-            {% else %}
-            <!-- Before login: Show login/register -->
-            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
-            {% endif %}
-        </div>
-    </header>
+    {% include 'navbar.html' %}
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -123,16 +73,7 @@
                         <h3 class="font-semibold text-lg text-gray-900">{{ user.first_name }} {{ user.last_name }}</h3>
                         <p class="text-gray-500 text-sm">{{ user.email }}</p>
 
-                        <!-- Profile Completion -->
-                        <div class="mt-4">
-                            <div class="flex justify-between text-xs text-gray-600 mb-1">
-                                <span>Profile Completion</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="profile-completion h-2 rounded-full" style="width: 75%"></div>
-                            </div>
-                        </div>
+
                     </div>
 
                     <!-- Navigation Links -->
@@ -176,8 +117,10 @@
 
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700">Email Address</label>
-                                <input type="email" placeholder="you@example.com" value="{{ user.email }}"
-                                    class="w-full px-4 py-3 border rounded-lg" />
+                                <input type="email" name="email" value="{{ user.email }}" readonly
+                                    class="w-full px-4 py-2 border rounded-lg mt-1 bg-gray-100 cursor-not-allowed"
+                                    required />
+
                             </div>
 
                             <div class="space-y-2">

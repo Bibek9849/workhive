@@ -211,14 +211,14 @@
     </nav>
 
     <div class="auth">
-        <div class="language-toggle" onclick="toggleLanguage()">
+        <!-- <div class="language-toggle" onclick="toggleLanguage()">
             <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language" />
             <span id="lang-label">English</span>
         </div>
 
         <div class="dark-toggle" onclick="toggleDarkMode()">
             <i class="fas fa-moon"></i>
-        </div>
+        </div> -->
 
         {% if user.is_authenticated %}
         <div class="user-menu">
@@ -234,7 +234,7 @@
 
             <div id="profile-dropdown" class="profile-dropdown">
                 <a href="{% url 'profile' %}">Profile</a>
-                <a href="#">Settings</a>
+                <a href="{% url 'change' %}">Settings</a>
                 <a href="{% url 'logout' %}">Logout</a>
             </div>
         </div>

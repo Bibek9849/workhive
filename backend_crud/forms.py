@@ -1,21 +1,19 @@
-# accounts/forms.py
 from django import forms
-from backend_crud.models import Skill, UserSkill
-from django.contrib.auth import get_user_model
-User = get_user_model()
+from .models import User, Skill
+
 class ProfileUpdateForm(forms.ModelForm):
     skills = forms.ModelMultipleChoiceField(
         queryset=Skill.objects.all(),
-        required=False,
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )
 
     class Meta:
         model = User
-        fields = ['first_name', 'email', 'phone_no', 'dob', 'gender', 'education', 'experience', 'image']
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-        if user:
-            self.fields['skills'].initial = user.user_skill.values_list('skill_id', flat=True)
+        fields = [
+            'first_name', 'last_name', 'dob', 'phone_no', 'gender',
+            'experience', 'education', 'image', 'skills'
+        ]
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+        }

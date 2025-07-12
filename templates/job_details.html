@@ -751,57 +751,8 @@
 </head>
 
 <body class="bg-gray-50 font-sans">
-    <header>
-        <a href="/">
-            <div class="logo">
-                <img src="{% static 'images/logo2.png' %}" alt="WorkHive Logo">
-            </div>
-        </a>
+    {% include 'navbar.html' %}
 
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'job' %}">Jobs</a></li>
-                <li><a href="{% url 'about' %}">About Us</a></li>
-                <li><a href="{% url 'contact' %}">Contact Us</a></li>
-            </ul>
-        </nav>
-
-        <div class="auth">
-            <div class="language-toggle" onclick="toggleLanguage()">
-                <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language">
-                <span id="lang-label">English</span>
-            </div>
-
-            {% if user.is_authenticated %}
-            <!-- After login: Show profile + logout -->
-            <div class="user-menu">
-                <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
-                    {% if user.image %}
-                    <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-img">
-                    {% else %}
-                    <img src="{% static 'images/default.png' %}" alt="Default Profile" class="profile-img">
-                    {% endif %}
-                    <span class="username">{{ user.first_name }}</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-
-                <div id="profile-dropdown" class="profile-dropdown hidden">
-                    <a href="{% url 'profile' %}">Profile</a>
-                    <a href="#">Settings</a>
-                    <a href="{% url 'logout' %}">Logout</a>
-                </div>
-            </div>
-
-
-
-            {% else %}
-            <!-- Before login: Show login/register -->
-            <a href="{% url 'login' %}" class="btn btn-outline">Login</a>
-            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
-            {% endif %}
-        </div>
-    </header>
 
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold text-center mb-8">Jobs Details</h1>
@@ -961,7 +912,8 @@
                     <i class="fas fa-times"></i>
                 </button>
                 <h2><i class="fas fa-briefcase mr-2"></i>Apply for Position</h2>
-                <p>Python Developer at Softwarica College</p>
+                <p>{{ job.title }} at {{ job.company.name }}</p>
+
             </div>
 
             <div class="modal-body">
@@ -973,7 +925,7 @@
                     {% endif %}
                     <div class="user-details">
                         <h3>{{ user.get_full_name }}</h3>
-                        <p>{{ user.profile.job_title|default:"Software Developer" }}</p>
+                        <p>{{ user.profile.job_title }}</p>
                     </div>
                 </div>
 
@@ -984,18 +936,19 @@
                             <i class="fas fa-envelope mr-2"></i>Email Address
                         </label>
                         <input type="email" class="form-input" value="{{ user.email }}" name="email"
-                            placeholder="your.email@example.com" {% if user.is_authenticated %}readonly{% endif %}
-                            required>
+                            placeholder="your.email@example.com" readonly required>
                     </div>
+
 
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-phone mr-2"></i>Contact Number
                         </label>
                         <input type="tel" class="form-input" value="{{ user.phone_no }}" name="phone"
-                            placeholder="+977 98XXXXXXXX" required>
-
+                            placeholder="+977 98XXXXXXXX" required inputmode="numeric" pattern="[0-9]*"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                     </div>
+
 
                     <div class="form-group">
                         <label class="form-label">
@@ -1112,6 +1065,7 @@
         });
 
     </script>
+    {% include 'footer.html' %}
 
 </body>
 

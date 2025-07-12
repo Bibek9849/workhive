@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.utils.http import urlsafe_base64_decode
 
 from backend_crud.forms import ProfileUpdateForm
-from backend_crud.models import Category, Company, Job,JobApplication, Skill, UserSkill
+from backend_crud.models import Category, Company, ExperienceLevel, Job,JobApplication, JobType, Skill, UserSkill
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -141,30 +141,80 @@ def details_view(request, job_id):
         'related_jobs': related_jobs,
     }
     return render(request, 'job_details.html', context)
+from django.db.models import Q
+
 def job_view(request):
+    # Read filters from request
     title_query = request.GET.get('title', '')
     location_query = request.GET.get('location', '')
-    category_query = request.GET.get('category', '')
+    category_query = request.GET.getlist('category')
+    job_type_query = request.GET.getlist('job_type')
+    experience_query = request.GET.getlist('experience')
+    min_salary = request.GET.get('minSalary')
+    max_salary = request.GET.get('maxSalary')
+    sort_by = request.GET.get('sort', 'latest')  # default to 'latest'
 
-    jobs = Job.objects.select_related('company', 'category', 'job_type').order_by('-posted_at')
+    # Start base queryset
+    jobs = Job.objects.select_related('company', 'category', 'job_type', 'experience')
 
-    # Filter by title or company name if provided
+    # Apply filters
     if title_query:
-        jobs = jobs.filter(Q(title__icontains=title_query) | Q(company__name__icontains=title_query))
+        jobs = jobs.filter(Q(title__istartswith=title_query) | Q(company__name__istartswith=title_query))
 
-    # Filter by company address/location if provided
     if location_query:
         jobs = jobs.filter(company__address__icontains=location_query)
 
-    # Filter by category if provided
     if category_query:
-        jobs = jobs.filter(category__id=category_query)
+        category_query = [cat for cat in category_query if cat.isdigit()]
+        if category_query:
+            jobs = jobs.filter(category__id__in=category_query)
 
-    # Optional: limit to latest 5 filtered jobs, or remove limit if you want all results
-    jobs = jobs[:5]
+    if job_type_query:
+        jobs = jobs.filter(job_type__name__in=job_type_query)
 
-    return render(request, 'jobs.html', {'jobs': jobs})
+    if experience_query:
+        jobs = jobs.filter(experience__level__in=experience_query)
 
+    if min_salary:
+        jobs = jobs.filter(salary_min__gte=min_salary)
+
+    if max_salary:
+        jobs = jobs.filter(salary_max__lte=max_salary)
+
+    # Apply sorting
+    if sort_by == 'name':
+        jobs = jobs.order_by('title')
+    else:
+        jobs = jobs.order_by('-posted_at')
+
+    # Optional: limit or paginate
+    jobs = jobs.distinct()[:10]
+
+    # Get filter dropdown options
+    categories = Category.objects.all()
+    job_types = JobType.objects.all()
+    experience_levels = ExperienceLevel.objects.all()
+
+    # Store selected filters to maintain in form
+    selected_filters = {
+        'title': title_query,
+        'location': location_query,
+        'categories': category_query,
+        'job_types': job_type_query,
+        'experience_levels': experience_query,
+        'minSalary': min_salary,
+        'maxSalary': max_salary,
+        'sort_by': sort_by
+    }
+
+    return render(request, 'jobs.html', {
+        'jobs': jobs,
+        'categories': categories,
+        'job_types': job_types,
+        'experience_levels': experience_levels,
+        'selected_filters': selected_filters,
+        'sort_by': sort_by
+    })
 def reset_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -228,32 +278,29 @@ def set_pass_view(request, uidb64, token):
 @login_required
 def applied_view(request):
     user = request.user
-    applications = JobApplication.objects.filter(user=user).select_related('job')
+    applications = JobApplication.objects.filter(user=user).select_related(
+        'job',
+        'job__company',
+        'job__category',
+        'job__job_type'
+    )
     return render(request, 'applied.html', {'applications': applications})
-
+@login_required
 def profile_view(request):
     user = request.user
-    if not user.is_authenticated:
-        return redirect('login')
-
     if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, request.FILES, instance=user, user=user)
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=user)  # include request.FILES if image upload
         if form.is_valid():
             form.save()
-
-            skills = form.cleaned_data['skills']
-            # Delete old skills
-            user.user_skill.all().delete()
-            # Add new skills
-            for skill in skills:
-                UserSkill.objects.create(user=user, skill=skill)
-
             messages.success(request, "Profile updated successfully!")
             return redirect('profile')
+        else:
+            # form invalid, you can debug here
+            print(form.errors)
     else:
-        form = ProfileUpdateForm(instance=user, user=user)
+        form = ProfileUpdateForm(instance=user)
 
-    return render(request, 'profile.html', {'form': form})
+    return render(request, 'profile.html', {'form': form, 'user': user})
 
 @login_required
 def upload_profile_image(request):
