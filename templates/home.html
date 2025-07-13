@@ -150,7 +150,7 @@
         <h1 id="hero-title">{% trans "Find your" %} <span class="blue">{% trans "new job" %}</span> {% trans "or" %} <span class="blue">{% trans "intern" %}</span> {% trans "today" %}</h1>
         <form method="GET" action="{% url 'job' %}">
             <div class="search-box">
-                <input type="text" name="title" placeholder="Job Title or Company">
+                <input type="text" name="title" placeholder="{% trans 'Job Title or Company' %}">
 
                 <!-- <select name="location">
                     <option value="">Select Location</option>

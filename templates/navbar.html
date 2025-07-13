@@ -77,6 +77,52 @@
         height: 15px;
     }
 
+    .language-selector {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .language-selector select {
+        background: var(--nav-bg);
+        color: var(--nav-text);
+        border: 1px solid var(--outline-color);
+        border-radius: 4px;
+        padding: 5px 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .language-selector select:focus {
+        outline: none;
+        border-color: var(--btn-bg);
+    }
+
+    .language-selector select option {
+        background: var(--nav-bg);
+        color: var(--nav-text);
+        padding: 5px 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .current-language {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--nav-text);
+    }
+
+    .current-language img {
+        width: 20px;
+        height: 15px;
+        border-radius: 2px;
+    }
+
     .dark-toggle {
         cursor: pointer;
         font-size: 18px;
@@ -213,35 +259,33 @@
     </nav>
 
     <div class="auth">
-        <!-- <div class="language-toggle" onclick="toggleLanguage()">
-            <img id="lang-flag" src="https://flagcdn.com/16x12/gb.png" alt="Language" />
-            <span id="lang-label">English</span>
+        <!-- Language Selector with Flags -->
+        <div class="language-selector">
+           
+            
+            <form action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path|escape }}" />
+                <select name="language" onchange="this.form.submit()">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% for code, name in LANGUAGES %}
+                    <option value="{{ code }}" {% if code == LANGUAGE_CODE %}selected{% endif %}>
+                        {% if code == 'en' %}🇬🇧 English
+                        {% elif code == 'ne' %}🇳🇵 नेपाली
+                        {% else %}{{ name }}
+                        {% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
         </div>
-        
 
-        <div class="dark-toggle" onclick="toggleDarkMode()">
+        <!-- Dark Mode Toggle (uncommented if needed) -->
+        <!-- <div class="dark-toggle" onclick="toggleDarkMode()">
             <i class="fas fa-moon"></i>
         </div> -->
-        <!-- <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
-            <a href="{% url 'signup' %}">Dont have Account Create</a>
-        </form> -->
 
-        <form action="{% url 'set_language' %}" method="post">
-            {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.get_full_path|escape }}" />
-            <select name="language" onchange="this.form.submit()">
-                {% get_current_language as LANGUAGE_CODE %}
-                {% get_available_languages as LANGUAGES %}
-                {% for code, name in LANGUAGES %}
-                <option value="{{ code }}" {% if code == LANGUAGE_CODE %}selected{% endif %}>
-                    {{ name }}
-                </option>
-                {% endfor %}
-            </select>
-        </form>
         {% if user.is_authenticated %}
         <div class="user-menu">
             <button class="profile-btn" onclick="toggleProfileDropdown()" id="profile-button">
@@ -282,18 +326,6 @@
     function toggleNavMenu() {
         const menu = document.getElementById('nav-menu');
         menu.classList.toggle('show');
-    }
-
-    function toggleLanguage() {
-        const flag = document.getElementById('lang-flag');
-        const label = document.getElementById('lang-label');
-        if (label.textContent === 'English') {
-            label.textContent = 'Nepali';
-            flag.src = "https://flagcdn.com/16x12/np.png";
-        } else {
-            label.textContent = 'English';
-            flag.src = "https://flagcdn.com/16x12/gb.png";
-        }
     }
 
     function toggleDarkMode() {

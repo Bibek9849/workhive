@@ -1,522 +1,659 @@
-{% load static i18n %}
+    {% load static i18n %}
 
-<!DOCTYPE html>
+    <!DOCTYPE html>
 
-<html lang="en">
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% trans "Job Listings" %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% trans "Job Listings" %}</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-    <style>
-        /* Your existing CSS styles */
-        .filter-section {
-            background-color: #ebf5f4;
-        }
+        <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+        <style>
+            /* Your existing CSS styles */
+            .filter-section {
+                background-color: #ebf5f4;
+            }
 
-        .filter-group {
-            margin-bottom: 1.5rem;
-        }
+            .filter-group {
+                margin-bottom: 1.5rem;
+            }
 
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.375rem 0;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+            .checkbox-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.375rem 0;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
 
-        .checkbox-item:hover {
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 4px;
-            padding-left: 0.5rem;
-        }
+            .checkbox-item:hover {
+                background-color: rgba(255, 255, 255, 0.5);
+                border-radius: 4px;
+                padding-left: 0.5rem;
+            }
 
-        .checkbox-item input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: #003b80;
-        }
+            .checkbox-item input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                accent-color: #003b80;
+            }
 
-        .filter-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #d1d5db;
-            border-radius: 8px;
-            background: white;
-            transition: all 0.3s ease;
-        }
+            .filter-input {
+                width: 100%;
+                padding: 0.75rem;
+                border: 2px solid #d1d5db;
+                border-radius: 8px;
+                background: white;
+                transition: all 0.3s ease;
+            }
 
-        .filter-input:focus {
-            outline: none;
-            border-color: #003b80;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
+            .filter-input:focus {
+                outline: none;
+                border-color: #003b80;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
 
-        .apply-btn {
-            width: 100%;
-            background: #0050b3;
-            color: white;
-            padding: 0.875rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+            .apply-btn {
+                width: 100%;
+                background: #0050b3;
+                color: white;
+                padding: 0.875rem;
+                border: none;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
 
-        .apply-btn:hover {
-            background: #003b80;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
+            .apply-btn:hover {
+                background: #003b80;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            }
 
-        .tag {
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 0.375rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+            .tag {
+                background: #dbeafe;
+                color: #1e40af;
+                padding: 0.375rem 0.75rem;
+                border-radius: 20px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
 
-        .tag:hover {
-            background: #bfdbfe;
-            transform: scale(1.05);
-        }
+            .tag:hover {
+                background: #bfdbfe;
+                transform: scale(1.05);
+            }
 
-        .hiring-banner {
-            background: #003b80;
-            color: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 1.5rem;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-        }
+            .hiring-banner {
+                background: #003b80;
+                color: white;
+                padding: 1.5rem;
+                border-radius: 12px;
+                text-align: center;
+                margin-top: 1.5rem;
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            }
 
-        .section-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+            .section-title {
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: #1f2937;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .rounded {
+                border-radius: 1.25rem;
+            }
 
-        .clear-filters {
-            background: transparent;
-            color: #ef4444;
-            border: 1px solid #ef4444;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 1rem;
-        }
+            .clear-filters {
+                background: transparent;
+                color: #ef4444;
+                border: 1px solid #ef4444;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-bottom: 1rem;
+            }
 
-        .clear-filters:hover {
-            background: #ef4444;
-            color: white;
-        }
+            .clear-filters:hover {
+                background: #ef4444;
+                color: white;
+            }
 
-        .footer {
-            background: linear-gradient(135deg, #082038 0%, #082038 100%);
-            color: white;
-            padding: 203px 0 50px;
-            position: relative;
-            overflow: hidden;
-        }
-    </style>
-</head>
+            .footer {
+                background: linear-gradient(135deg, #082038 0%, #082038 100%);
+                color: white;
+                padding: 203px 0 50px;
+                position: relative;
+                overflow: hidden;
+            }
+        </style>
+    </head>
 
-<body class="bg-gray-100 font-sans">
+    <body class="bg-gray-100 font-sans">
 
-    <!-- Header -->
-    {% include 'navbar.html' %}
+        <!-- Header -->
+        {% include 'navbar.html' %}
 
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold text-center mb-8">{% trans "Jobs" %}</h1>
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 py-6">
+            <h1 class="text-2xl font-bold text-center mb-8">{% trans "Jobs" %}</h1>
 
-        <div class="flex flex-col lg:flex-row gap-4">
-            <!-- Sidebar -->
-            <aside class="w-full lg:w-1/4 filter-section p-6 rounded-xl shadow-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="section-title">
-                        <i class="fas fa-filter text-blue-600"></i>
-                        {% trans "Search Filters" %}
-                    </h2>
-                    <button class="clear-filters" onclick="clearAllFilters()">
-                        <i class="fas fa-times"></i> {% trans "Clear" %}
-                    </button>
-                </div>
-
-                <!-- Job Title Search -->
-                <div class="filter-group">
-                    <h3 class="section-title">
-                        <i class="fas fa-search text-blue-600"></i>
-                        {% trans "Job Title" %}
-                    </h3>
-                    <input type="text" placeholder="{% trans "Search job title or company..." %}" class="filter-input" id="jobSearch" />
-                </div>
-
-                <!-- Location -->
-                <div class="filter-group">
-                    <h3 class="section-title">
-                        <i class="fas fa-map-marker-alt text-blue-600"></i>
-                        {% trans "Location" %}
-                    </h3>
-                    <select class="filter-input" id="locationSelect">
-                        <option value="">{% trans "Choose city" %}</option>
-                        <option value="kathmandu">{% trans "Kathmandu" %}</option>
-                        <option value="lalitpur">{% trans "Lalitpur" %}</option>
-                        <option value="bhaktapur">{% trans "Bhaktapur" %}</option>
-                        <option value="pokhara">{% trans "Pokhara" %}</option>
-                        <option value="chitwan">{% trans "Chitwan" %}</option>
-                    </select>
-                </div>
-
-                <!-- Category -->
-                <div class="filter-group">
-                    <h3 class="section-title">
-                        <i class="fas fa-layer-group text-blue-600"></i>
-                        {% trans "Category" %}
-                    </h3>
-                    <div class="space-y-1">
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="creative" /> {% trans "Creative & Design" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="business" /> {% trans "Business & Finance" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="construction" /> {% trans "Construction" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="commerce" /> {% trans "E-Commerce" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="tourism" /> {% trans "Hotels & Tourism" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="it" /> {% trans "Information Technology" %}
-                        </label>
+            <div class="flex flex-col lg:flex-row gap-4">
+                <!-- Sidebar -->
+                <aside class="w-full lg:w-1/4 filter-section p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="section-title">
+                            <i class="fas fa-filter text-blue-600"></i>
+                            {% trans "Search Filters" %}
+                        </h2>
+                        <button type="button" class="clear-filters" onclick="clearAllFiltersAndReload()">
+                            <i class="fas fa-times"></i> {% trans "Clear" %}
+                        </button>
+                        
                     </div>
-                </div>
 
-                <!-- Job Type -->
-                <div class="filter-group">
-                    <h3 class="section-title">
-                        <i class="fas fa-briefcase text-blue-600"></i>
-                        {% trans "Job Type" %}
-                    </h3>
-                    <div class="space-y-1">
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="fulltime" /> {% trans "Full Time" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="parttime" /> {% trans "Part Time" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="internship" /> {% trans "Internship" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="freelance" /> {% trans "Freelance" %}
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Experience Level -->
-                <div class="filter-group">
-                    <h3 class="section-title">
-                        <i class="fas fa-chart-line text-blue-600"></i>
-                        {% trans "Experience Level" %}
-                    </h3>
-                    <div class="space-y-1">
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="entry" /> {% trans "Entry Level (0-1 years)" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="junior" /> {% trans "Junior (1-3 years)" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="mid" /> {% trans "Mid Level (3-6 years)" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="senior" /> {% trans "Senior (6+ years)" %}
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Date Posted -->
-                <div class="filter-group">
-                    <h3 class="section-title">
-                        <i class="fas fa-calendar-alt text-blue-600"></i>
-                        {% trans "Date Posted" %}
-                    </h3>
-                    <div class="space-y-1">
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="24h" /> {% trans "Last 24 hours" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="7d" /> {% trans "Last 7 days" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="30d" /> {% trans "Last 30 days" %}
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="any" /> {% trans "Any time" %}
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Salary Range -->
-                <div class="filter-group">
-                    <h3 class="section-title">
-                        <i class="fas fa-money-bill-wave text-blue-600"></i>
-                        {% trans "Salary Range" %}
-                    </h3>
-                    <div class="flex gap-2 mb-2">
-                        <input
-                            type="number"
-                            placeholder="{% trans 'Min (Rs)' %}"
-                            class="filter-input"
-                            id="minSalary"
-                        />
-                        <input
-                            type="number"
-                            placeholder="{% trans 'Max (Rs)' %}"
-                            class="filter-input"
-                            id="maxSalary"
-                        />
-                    </div>
-                    <div class="text-sm text-gray-600 mb-3">
-                        <span>{% trans "Popular ranges:" %}</span>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            <button
-                                class="text-xs bg-white px-2 py-1 rounded border"
-                                onclick="setSalaryRange(15000, 30000)"
-                            >
-                                15k-30k
-                            </button>
-                            <button
-                                class="text-xs bg-white px-2 py-1 rounded border"
-                                onclick="setSalaryRange(30000, 60000)"
-                            >
-                                30k-60k
-                            </button>
-                            <button
-                                class="text-xs bg-white px-2 py-1 rounded border"
-                                onclick="setSalaryRange(60000, 100000)"
-                            >
-                                60k-100k
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="apply-btn" onclick="applyFilters()">
-                    <i class="fas fa-search mr-2"></i> {% trans "Apply Filters" %}
-                </button>
-
-                <!-- Popular Tags (commented out) -->
-                <!-- <div class="filter-group">
-                    <h3 class="section-title">
-                        <i class="fas fa-tags text-blue-600"></i>
-                        {% trans "Popular Tags" %}
-                    </h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="tag" onclick="searchByTag('creative')">{% trans "creative" %}</span>
-                        <span class="tag" onclick="searchByTag('management')">{% trans "management" %}</span>
-                        <span class="tag" onclick="searchByTag('staff')">{% trans "staff" %}</span>
-                        <span class="tag" onclick="searchByTag('remote')">{% trans "remote" %}</span>
-                        <span class="tag" onclick="searchByTag('urgent')">{% trans "urgent" %}</span>
-                    </div>
-                </div> -->
-
-                <!-- Hiring Banner -->
-                <div class="hiring-banner">
-                    <div class="text-2xl font-bold mb-2">
-                        <i class="fas fa-bullhorn mr-2"></i> {% trans "WE ARE HIRING" %}
-                    </div>
-                    <p class="mb-3">{% trans "Join our team today!" %}</p>
-                    <button
-                        class="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-                    >
-                        {% trans "Apply Now" %}
-                    </button>
-                </div>
-            </aside>
-
-            <!-- Main Content Area -->
-            <main class="w-full lg:w-3/4">
-                <div class="flex justify-between items-center mb-4">
-                    <select class="border rounded p-2">
-                        <option>{% trans "Sort by latest" %}</option>
-                    </select>
-                </div>
-
-                <!-- Job Cards -->
-                <div class="space-y-4">
-                    {% for job in jobs %}
-                    <div class="job-card">
-                        <div class="posted">{{ job.posted_at|timesince }} {% trans "ago" %} </div>
-                        <div class="job-info-left">
-                            {% if job.company.logo %}
-                            <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo" />
-                            {% else %}
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/732/732200.png"
-                                alt="{% trans "Default Logo" %}"
+                    <!-- Job Title Search -->
+                    <form method="get" id="search-form">
+                        <!-- Job Title Search -->
+                        <div class="filter-group">
+                            <h3 class="section-title">
+                                <i class="fas fa-search text-blue-600"></i>
+                                {% trans "Job Title" %}
+                            </h3>
+                            <input
+                                type="text"
+                                name="title"
+                                value="{{ selected_filters.title }}"
+                                placeholder="{% trans 'Search job title or company...' %}"
+                                class="filter-input"
+                                id="jobSearch"
                             />
-                            {% endif %}
-
-                            <div class="job-details">
-                                <h3>{{ job.title }}</h3>
-                                <p>{{ job.company.name }}</p>
-                                <div class="job-meta">
-                                    <span><i class="fas fa-laptop-code"></i> {{ job.category.name }}</span>
-                                    <span><i class="fas fa-clock"></i> {{ job.job_type.name }}</span>
-                                    <span>
-                                        <i class="fas fa-money-bill"></i>
-                                        {% if job.salary_max %}
-                                        Rs {{ job.salary_min }} - Rs {{ job.salary_max }}
-                                        {% else %}
-                                        Rs {{ job.salary_min }}+
-                                        {% endif %}
-                                    </span>
-    
-                                    <span><i class="fas fa-map-marker-alt"></i> {{ job.company.address }}</span>
-                                </div>
+                        </div>
+                    
+                        <!-- Category Filter -->
+                        <div class="filter-group">
+                            <h3 class="section-title">
+                                <i class="fas fa-layer-group text-blue-600"></i>
+                                {% trans "Category" %}
+                            </h3>
+                            <div class="space-y-1">
+                                {% for category in categories %}
+                                    <label class="checkbox-item">
+                                        <input
+                                            type="checkbox"
+                                            name="category"
+                                            value="{{ category.id }}"
+                                            {% if category.id|stringformat:"s" in selected_filters.categories %}checked{% endif %}
+                                            onchange="document.getElementById('search-form').submit();"
+                                        />
+                                        {{ category.name }}
+                                    </label>
+                                {% endfor %}
                             </div>
                         </div>
-                        <a href="{% url 'details' job.id %}" class="btn btn-primary">{% trans "Job Details" %}</a>
+
+                        <div class="filter-group">
+                            <h3 class="section-title">
+                                <i class="fas fa-briefcase text-blue-600"></i>
+                                {% trans "Job Type" %}
+                            </h3>
+                            <div class="space-y-1">
+                                {% for type in job_types %}
+                                    <label class="checkbox-item">
+                                        <input
+                                            type="checkbox"
+                                            name="job_type"
+                                            value="{{ type.name }}"
+                                            {% if type.name in selected_filters.job_types %}checked{% endif %}
+                                            onchange="document.getElementById('search-form').submit();"
+                                        />
+                                        {{ type.name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <h3 class="section-title">
+                                <i class="fas fa-chart-line text-blue-600"></i>
+                                {% trans "Experience Level" %}
+                            </h3>
+                            <div class="space-y-1">
+                                {% for level in experience_levels %}
+                                    <label class="checkbox-item">
+                                        <input
+                                            type="checkbox"
+                                            name="experience"
+                                            value="{{ level.level }}"
+                                            {% if level.level in selected_filters.experience_levels %}checked{% endif %}
+                                            onchange="document.getElementById('search-form').submit();"
+                                        />
+                                        {{ level.level }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <h3 class="section-title">
+                                <i class="fas fa-calendar-alt text-blue-600"></i>
+                                {% trans "Date Posted" %}
+                            </h3>
+                            <div class="space-y-1">
+                                <label class="checkbox-item">
+                                    <input
+                                        type="checkbox"
+                                        name="date_posted"
+                                        value="24h"
+                                        {% if "24h" in selected_filters.date_posted %}checked{% endif %}
+                                        onchange="document.getElementById('search-form').submit();"
+                                    />
+                                    {% trans "Last 24 hours" %}
+                                </label>
+                                <label class="checkbox-item">
+                                    <input
+                                        type="checkbox"
+                                        name="date_posted"
+                                        value="7d"
+                                        {% if "7d" in selected_filters.date_posted %}checked{% endif %}
+                                        onchange="document.getElementById('search-form').submit();"
+                                    />
+                                    {% trans "Last 7 days" %}
+                                </label>
+                                <label class="checkbox-item">
+                                    <input
+                                        type="checkbox"
+                                        name="date_posted"
+                                        value="30d"
+                                        {% if "30d" in selected_filters.date_posted %}checked{% endif %}
+                                        onchange="document.getElementById('search-form').submit();"
+                                    />
+                                    {% trans "Last 30 days" %}
+                                </label>
+                                <label class="checkbox-item">
+                                    <input
+                                        type="checkbox"
+                                        name="date_posted"
+                                        value="any"
+                                        {% if "any" in selected_filters.date_posted %}checked{% endif %}
+                                        onchange="document.getElementById('search-form').submit();"
+                                    />
+                                    {% trans "Any time" %}
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4 mb-4">
+                            <input
+                              type="number"
+                              name="minSalary"
+                              value="{{ selected_filters.minSalary }}"
+                              placeholder="{% trans 'Min (Rs)' %}"
+                              class="filter-input flex-1"
+                              id="minSalary"
+                            />
+                            <input
+                              type="number"
+                              name="maxSalary"
+                              value="{{ selected_filters.maxSalary }}"
+                              placeholder="{% trans 'Max (Rs)' %}"
+                              class="filter-input flex-1"
+                              id="maxSalary"
+                            />
+                          </div>
+                          
+                        
+                    </form>
+                    
+                    
+
+                    <!-- Job Type -->
+                    <!-- <div class="filter-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-briefcase text-blue-600"></i>
+                            {% trans "Job Type" %}
+                        </h3>
+                        <div class="space-y-1">
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="fulltime" /> {% trans "Full Time" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="parttime" /> {% trans "Part Time" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="internship" /> {% trans "Internship" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="freelance" /> {% trans "Freelance" %}
+                            </label>
+                        </div>
+                    </div> -->
+
+                    <!-- Experience Level -->
+                    <!-- <div class="filter-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-line text-blue-600"></i>
+                            {% trans "Experience Level" %}
+                        </h3>
+                        <div class="space-y-1">
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="entry" /> {% trans "Entry Level (0-1 years)" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="junior" /> {% trans "Junior (1-3 years)" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="mid" /> {% trans "Mid Level (3-6 years)" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="senior" /> {% trans "Senior (6+ years)" %}
+                            </label>
+                        </div>
+                    </div> -->
+
+                    <!-- Date Posted -->
+                    <!-- <div class="filter-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-calendar-alt text-blue-600"></i>
+                            {% trans "Date Posted" %}
+                        </h3>
+                        <div class="space-y-1">
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="24h" /> {% trans "Last 24 hours" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="7d" /> {% trans "Last 7 days" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="30d" /> {% trans "Last 30 days" %}
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="any" /> {% trans "Any time" %}
+                            </label>
+                        </div>
+                    </div> -->
+
+                    <!-- Salary Range -->
+                    <!-- <div class="filter-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-money-bill-wave text-blue-600"></i>
+                            {% trans "Salary Range" %}
+                        </h3>
+                        <div class="flex gap-2 mb-2">
+                            <input
+                                type="number"
+                                placeholder="{% trans 'Min (Rs)' %}"
+                                class="filter-input"
+                                id="minSalary"
+                            />
+                            <input
+                                type="number"
+                                placeholder="{% trans 'Max (Rs)' %}"
+                                class="filter-input"
+                                id="maxSalary"
+                            />
+                        </div>
+                        <div class="text-sm text-gray-600 mb-3">
+                            <span>{% trans "Popular ranges:" %}</span>
+                            <div class="flex flex-wrap gap-1 mt-1">
+                                <button
+                                    class="text-xs bg-white px-2 py-1 rounded border"
+                                    onclick="setSalaryRange(15000, 30000)"
+                                >
+                                    15k-30k
+                                </button>
+                                <button
+                                    class="text-xs bg-white px-2 py-1 rounded border"
+                                    onclick="setSalaryRange(30000, 60000)"
+                                >
+                                    30k-60k
+                                </button>
+                                <button
+                                    class="text-xs bg-white px-2 py-1 rounded border"
+                                    onclick="setSalaryRange(60000, 100000)"
+                                >
+                                    60k-100k
+                                </button>
+                            </div>
+                        </div>
+                    </div> -->
+
+                   
+
+                    <!-- Popular Tags (commented out) -->
+                    <!-- <div class="filter-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-tags text-blue-600"></i>
+                            {% trans "Popular Tags" %}
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="tag" onclick="searchByTag('creative')">{% trans "creative" %}</span>
+                            <span class="tag" onclick="searchByTag('management')">{% trans "management" %}</span>
+                            <span class="tag" onclick="searchByTag('staff')">{% trans "staff" %}</span>
+                            <span class="tag" onclick="searchByTag('remote')">{% trans "remote" %}</span>
+                            <span class="tag" onclick="searchByTag('urgent')">{% trans "urgent" %}</span>
+                        </div>
+                    </div> -->
+
+                    <!-- Hiring Banner -->
+                    <div class="hiring-banner">
+                        <div class="text-2xl font-bold mb-2">
+                            <i class="fas fa-bullhorn mr-2"></i> {% trans "WE ARE HIRING" %}
+                        </div>
+                        <p class="mb-3">{% trans "Join our team today!" %}</p>
+                        <button
+                            class="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                        >
+                            {% trans "Apply Now" %}
+                        </button>
                     </div>
-                    {% empty %}
-                    <p>{% trans "No recent jobs found." %}</p>
-                    {% endfor %}
-                </div>
-            </main>
+                </aside>
+
+                <!-- Main Content Area -->
+                <main class="w-full lg:w-3/4">
+                    <form method="get" class="w-full mb-4 flex justify-between items-center">
+                        <div class="flex justify-between items-center mb-4">
+                            <select name="sort" class="border rounded p-2 ml-auto" onchange="this.form.submit()">
+                                <option value="latest" {% if sort_by == 'latest' %}selected{% endif %}>{% trans "Sort by latest" %}</option>
+                                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>{% trans "Sort by name" %}</option>
+                            </select>
+                        </div>
+                        
+                    </form>
+                    
+
+                    <!-- Job Cards -->
+                    <div class="space-y-4">
+                        {% for job in jobs %}
+                        <div class="job-card">
+                            <div class="posted">{{ job.posted_at|timesince }} {% trans "ago" %} </div>
+                            <div class="job-info-left">
+                                {% if job.company.logo %}
+                                <img src="{{ job.company.logo.url }}" alt="{{ job.title }} Logo" />
+                                {% else %}
+                                <img
+                                    src="https://cdn-icons-png.flaticon.com/512/732/732200.png"
+                                    alt="{% trans "Default Logo" %}"
+                                />
+                                {% endif %}
+
+                                <div class="job-details">
+                                    <h3>{{ job.title }}</h3>
+                                    <p>{{ job.company.name }}</p>
+                                    <div class="job-meta">
+                                        <span><i class="fas fa-laptop-code"></i> {{ job.category.name }}</span>
+                                        <span><i class="fas fa-clock"></i> {{ job.job_type.name }}</span>
+                                        <span>
+                                            <i class="fas fa-money-bill"></i>
+                                            {% if job.salary_max %}
+                                            Rs {{ job.salary_min }} - Rs {{ job.salary_max }}
+                                            {% else %}
+                                            Rs {{ job.salary_min }}+
+                                            {% endif %}
+                                        </span>
+        
+                                        <span><i class="fas fa-map-marker-alt"></i> {{ job.company.address }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="{% url 'details' job.id %}" class="btn btn-primary">{% trans "Job Details" %}</a>
+                        </div>
+                        {% empty %}
+                        <p>{% trans "No recent jobs found." %}</p>
+                        {% endfor %}
+                    </div>
+                </main>
+            </div>
         </div>
-    </div>
 
-    <script>
-        // Your existing JS code (unchanged)
-        function toggleLanguage() {
-            const flag = document.getElementById("lang-flag");
-            const label = document.getElementById("lang-label");
-            const title = document.getElementById("hero-title");
+        <script>
+            // Your existing JS code (unchanged)
+            function toggleLanguage() {
+                const flag = document.getElementById("lang-flag");
+                const label = document.getElementById("lang-label");
+                const title = document.getElementById("hero-title");
 
-            if (label.textContent === "English") {
-                // Switch to Nepali
-                flag.src = "https://flagcdn.com/16x12/np.png";
-                label.textContent = "नेपाली";
-            } else {
-                // Switch to English
-                flag.src = "https://flagcdn.com/16x12/gb.png";
-                label.textContent = "English";
+                if (label.textContent === "English") {
+                    // Switch to Nepali
+                    flag.src = "https://flagcdn.com/16x12/np.png";
+                    label.textContent = "नेपाली";
+                } else {
+                    // Switch to English
+                    flag.src = "https://flagcdn.com/16x12/gb.png";
+                    label.textContent = "English";
+                }
             }
-        }
-        function clearAllFilters() {
-            document.querySelectorAll("input[type='checkbox']").forEach((cb) => (cb.checked = false));
+            function clearAllFilters() {
+                document.querySelectorAll("input[type='checkbox']").forEach((cb) => (cb.checked = false));
 
-            document.getElementById("jobSearch").value = "";
-            document.getElementById("minSalary").value = "";
-            document.getElementById("maxSalary").value = "";
+                document.getElementById("jobSearch").value = "";
+                document.getElementById("minSalary").value = "";
+                document.getElementById("maxSalary").value = "";
 
-            document.getElementById("locationSelect").value = "";
+                document.getElementById("locationSelect").value = "";
 
-            console.log("All filters cleared");
-        }
+                console.log("All filters cleared");
+            }
 
-        function setSalaryRange(min, max) {
-            document.getElementById("minSalary").value = min;
-            document.getElementById("maxSalary").value = max;
-        }
+            function setSalaryRange(min, max) {
+                document.getElementById("minSalary").value = min;
+                document.getElementById("maxSalary").value = max;
+            }
 
-        function searchByTag(tag) {
-            document.getElementById("jobSearch").value = tag;
-            applyFilters();
-        }
+            function searchByTag(tag) {
+                document.getElementById("jobSearch").value = tag;
+                applyFilters();
+            }
 
-        function applyFilters() {
-            const filters = {
-                jobTitle: document.getElementById("jobSearch").value,
-                location: document.getElementById("locationSelect").value,
-                categories: Array.from(
-                    document.querySelectorAll("input[type='checkbox']:checked")
-                ).map((cb) => cb.value),
-                minSalary: document.getElementById("minSalary").value,
-                maxSalary: document.getElementById("maxSalary").value,
-            };
+            function applyFilters() {
+                const filters = {
+                    jobTitle: document.getElementById("jobSearch").value,
+                    location: document.getElementById("locationSelect").value,
+                    categories: Array.from(
+                        document.querySelectorAll("input[type='checkbox']:checked")
+                    ).map((cb) => cb.value),
+                    minSalary: document.getElementById("minSalary").value,
+                    maxSalary: document.getElementById("maxSalary").value,
+                };
 
-            console.log("Applying filters:", filters);
+                console.log("Applying filters:", filters);
 
-            const btn = document.querySelector(".apply-btn");
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Searching...';
-            btn.disabled = true;
+                const btn = document.querySelector(".apply-btn");
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Searching...';
+                btn.disabled = true;
 
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-
-                btn.innerHTML = '<i class="fas fa-check mr-2"></i>Filters Applied';
                 setTimeout(() => {
                     btn.innerHTML = originalText;
-                }, 1500);
-            }, 1000);
-        }
+                    btn.disabled = false;
 
-        document.getElementById("jobSearch").addEventListener("input", function (e) {
-            if (e.target.value.length > 2) {
-                console.log("Searching for:", e.target.value);
+                    btn.innerHTML = '<i class="fas fa-check mr-2"></i>Filters Applied';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                    }, 1500);
+                }, 1000);
             }
-        });
 
-        function updateFilterCount() {
-            const checkedFilters = document.querySelectorAll(
-                "input[type='checkbox']:checked"
-            ).length;
-            const hasTextFilters =
-                document.getElementById("jobSearch").value ||
-                document.getElementById("minSalary").value ||
-                document.getElementById("maxSalary").value ||
-                document.getElementById("locationSelect").value;
+            document.getElementById("jobSearch").addEventListener("input", function (e) {
+                if (e.target.value.length > 2) {
+                    console.log("Searching for:", e.target.value);
+                }
+            });
 
-            const totalFilters = checkedFilters + (hasTextFilters ? 1 : 0);
+            function updateFilterCount() {
+                const checkedFilters = document.querySelectorAll(
+                    "input[type='checkbox']:checked"
+                ).length;
+                const hasTextFilters =
+                    document.getElementById("jobSearch").value ||
+                    document.getElementById("minSalary").value ||
+                    document.getElementById("maxSalary").value ||
+                    document.getElementById("locationSelect").value;
 
-            console.log("Active filters:", totalFilters);
-        }
+                const totalFilters = checkedFilters + (hasTextFilters ? 1 : 0);
 
-        document.addEventListener("change", updateFilterCount);
-        document.addEventListener("input", updateFilterCount);
-        function toggleProfileDropdown() {
-            const dropdown = document.getElementById("profile-dropdown");
-            dropdown.classList.toggle("show");
-        }
-
-        window.addEventListener("click", function (e) {
-            const dropdown = document.getElementById("profile-dropdown");
-            const button = document.getElementById("profile-button");
-
-            if (!button.contains(e.target)) {
-                dropdown.classList.remove("show");
+                console.log("Active filters:", totalFilters);
             }
-        });
-    </script>
 
-    {% include "footer.html" %}
-</body>
+            document.addEventListener("change", updateFilterCount);
+            document.addEventListener("input", updateFilterCount);
+            function toggleProfileDropdown() {
+                const dropdown = document.getElementById("profile-dropdown");
+                dropdown.classList.toggle("show");
+            }
 
-</html>
+            window.addEventListener("click", function (e) {
+                const dropdown = document.getElementById("profile-dropdown");
+                const button = document.getElementById("profile-button");
+
+                if (!button.contains(e.target)) {
+                    dropdown.classList.remove("show");
+                }
+            });
+        </script>
+        <script>
+            const searchInput = document.getElementById('jobSearch');
+            let debounceTimer;
+        
+            searchInput.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    document.getElementById('search-form').submit();
+                }, 200); // adjust the delay if needed
+            });
+        </script>
+        <script>
+            function clearAllFiltersAndReload() {
+                // Clear all checkboxes
+                document.querySelectorAll("input[type='checkbox']").forEach(cb => cb.checked = false);
+        
+                // Clear text and number fields
+                document.getElementById("jobSearch").value = "";
+                document.getElementById("minSalary").value = "";
+                document.getElementById("maxSalary").value = "";
+        
+                // Optional: Clear location if used
+                const locationSelect = document.getElementById("locationSelect");
+                if (locationSelect) locationSelect.value = "";
+        
+                // Submit an empty form to reload without filters
+                window.location.href = window.location.pathname;  // Reloads the current page without query params
+            }
+        </script>
+        
+
+        {% include "footer.html" %}
+    </body>
+
+    </html>

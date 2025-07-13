@@ -143,6 +143,10 @@ def details_view(request, job_id):
     return render(request, 'job_details.html', context)
 from django.db.models import Q
 
+from django.db.models import Q
+from django.utils.timezone import now
+from datetime import timedelta
+
 def job_view(request):
     # Read filters from request
     title_query = request.GET.get('title', '')
@@ -150,6 +154,8 @@ def job_view(request):
     category_query = request.GET.getlist('category')
     job_type_query = request.GET.getlist('job_type')
     experience_query = request.GET.getlist('experience')
+    date_posted_query = request.GET.getlist('date_posted')  # <-- new
+
     min_salary = request.GET.get('minSalary')
     max_salary = request.GET.get('maxSalary')
     sort_by = request.GET.get('sort', 'latest')  # default to 'latest'
@@ -181,6 +187,18 @@ def job_view(request):
     if max_salary:
         jobs = jobs.filter(salary_max__lte=max_salary)
 
+    # New Date Posted filter logic
+    if date_posted_query and 'any' not in date_posted_query:
+        date_filter = Q()
+        for val in date_posted_query:
+            if val == '24h':
+                date_filter |= Q(posted_at__gte=now() - timedelta(hours=24))
+            elif val == '7d':
+                date_filter |= Q(posted_at__gte=now() - timedelta(days=7))
+            elif val == '30d':
+                date_filter |= Q(posted_at__gte=now() - timedelta(days=30))
+        jobs = jobs.filter(date_filter)
+
     # Apply sorting
     if sort_by == 'name':
         jobs = jobs.order_by('title')
@@ -195,6 +213,13 @@ def job_view(request):
     job_types = JobType.objects.all()
     experience_levels = ExperienceLevel.objects.all()
 
+    date_posted_options = [
+    ('24h', 'Last 24 hours'),
+    ('7d', 'Last 7 days'),
+    ('30d', 'Last 30 days'),
+    ('any', 'Any time'),
+]
+
     # Store selected filters to maintain in form
     selected_filters = {
         'title': title_query,
@@ -202,9 +227,12 @@ def job_view(request):
         'categories': category_query,
         'job_types': job_type_query,
         'experience_levels': experience_query,
+        'date_posted': date_posted_query,  # <-- new
         'minSalary': min_salary,
         'maxSalary': max_salary,
-        'sort_by': sort_by
+        'sort_by': sort_by,
+        'date_posted_options': date_posted_options,
+
     }
 
     return render(request, 'jobs.html', {
@@ -215,6 +243,7 @@ def job_view(request):
         'selected_filters': selected_filters,
         'sort_by': sort_by
     })
+
 def reset_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')

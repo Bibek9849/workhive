@@ -520,3 +520,9 @@ msgstr "पोस्ट गरिएको मिति"
 
 msgid "Category"
 msgstr "श्रेणी"
+
+msgid "Sort by name"
+msgstr "नाम अनुसार क्रमबद्ध गर्नुहोस्"
+
+msgid "Job Title or Company"
+msgstr "काम शीर्षक वा कम्पनी"
